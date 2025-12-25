@@ -1,0 +1,86 @@
+/* app.wxss */
+page {
+  --primary-color: #07c160;
+  --bg-color: #f8f9fa;
+  --text-color: #333333;
+  --card-bg: #ffffff;
+  --border-color: #e0e0e0;
+  --shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.08);
+  --radius: 16rpx;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+
+page[data-theme="dark"] {
+  --primary-color: #07c160;
+  --bg-color: #1a1a1a;
+  --text-color: #e0e0e0;
+  --card-bg: #2d2d2d;
+  --border-color: #404040;
+  --shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.2);
+}
+
+.card {
+  background-color: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 32rpx;
+  margin: 24rpx;
+  border: 1rpx solid var(--border-color);
+}
+
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: var(--radius) !important;
+  font-size: 28rpx !important;
+  height: 80rpx !important;
+  line-height: 80rpx !important;
+}
+
+.btn-secondary {
+  background-color: var(--card-bg) !important;
+  color: var(--text-color) !important;
+  border: 1rpx solid var(--border-color) !important;
+  border-radius: var(--radius) !important;
+  font-size: 28rpx !important;
+  height: 80rpx !important;
+  line-height: 80rpx !important;
+}
+
+.input-field {
+  background-color: var(--card-bg);
+  border: 1rpx solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 20rpx 24rpx;
+  font-size: 28rpx;
+  color: var(--text-color);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input-field:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.label {
+  font-size: 24rpx;
+  color: #666666;
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+.divider {
+  height: 1rpx;
+  background-color: var(--border-color);
+  margin: 40rpx 0;
+}
+
+.tool-container {
+  min-height: 100vh;
+  padding-bottom: 120rpx;
+}
