@@ -1,2 +1,197 @@
-<!--pages/calculator/scientific/index.wxml-->
-<text>pages/calculator/scientific/index.wxml</text>
+<view class="scientific-page" data-theme="{{theme}}">
+  <view class="custom-nav">
+    <button class="back-btn" bindtap="goBack">←</button>
+    <!-- <text class="nav-title">科学计算器</text> -->
+    <button class="home-btn" bindtap="goHome">🏠</button>
+  </view>
+
+  <view class="display-area card">
+    <view class="history-display">
+      <text class="history-text">{{history}}</text>
+    </view>
+    <view class="main-display">
+      <text class="result-text">{{expression || '0'}}</text>
+    </view>
+  </view>
+  
+  <view class="mode-selector">
+    <view class="mode-buttons">
+      <button 
+        class="mode-btn {{mode === 'basic' ? 'active' : ''}}" 
+        bindtap="setMode" 
+        data-mode="basic"
+      >
+        基础
+      </button>
+      <button 
+        class="mode-btn {{mode === 'scientific' ? 'active' : ''}}" 
+        bindtap="setMode" 
+        data-mode="scientific"
+      >
+        科学
+      </button>
+      <button 
+        class="mode-btn {{mode === 'programmer' ? 'active' : ''}}" 
+        bindtap="setMode" 
+        data-mode="programmer"
+      >
+        程序员
+      </button>
+    </view>
+  </view>
+  
+  <!-- 基础模式 -->
+  <view class="keypad-area" wx:if="{{mode === 'basic'}}">
+    <view class="keypad-row">
+      <button class="keypad-btn function-btn" bindtap="clearAll">C</button>
+      <button class="keypad-btn function-btn" bindtap="deleteLast">⌫</button>
+      <button class="keypad-btn function-btn" bindtap="inputFunction" data-func="(">(</button>
+      <button class="keypad-btn function-btn" bindtap="inputFunction" data-func=")">)</button>
+      <button class="keypad-btn operator-btn" bindtap="inputOperator" data-op="÷">÷</button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn function-btn" bindtap="inputFunction" data-func="sin">sin</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="7">7</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="8">8</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="9">9</button>
+      <button class="keypad-btn operator-btn" bindtap="inputOperator" data-op="×">×</button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn function-btn" bindtap="inputFunction" data-func="cos">cos</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="4">4</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="5">5</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="6">6</button>
+      <button class="keypad-btn operator-btn" bindtap="inputOperator" data-op="-">-</button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn function-btn" bindtap="inputFunction" data-func="tan">tan</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="1">1</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="2">2</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="3">3</button>
+      <button class="keypad-btn operator-btn" bindtap="inputOperator" data-op="+">+</button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn function-btn" bindtap="inputConstant" data-const="π">π</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="0">0</button>
+      <button class="keypad-btn number-btn" bindtap="inputDecimal">.</button>
+      <button class="keypad-btn function-btn" bindtap="inputFunction" data-func="^">^</button>
+      <button class="keypad-btn equals-btn" bindtap="calculate">=</button>
+    </view>
+  </view>
+  
+  <!-- 科学模式 -->
+  <view class="keypad-area" wx:if="{{mode === 'scientific'}}">
+    <view class="keypad-row">
+      <button class="keypad-btn function-btn" bindtap="clearAll">C</button>
+      <button class="keypad-btn function-btn" bindtap="deleteLast">⌫</button>
+      <button class="keypad-btn function-btn" bindtap="inputFunction" data-func="(">(</button>
+      <button class="keypad-btn function-btn" bindtap="inputFunction" data-func=")">)</button>
+      <button class="keypad-btn function-btn" bindtap="inputFunction" data-func="!">!</button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn function-btn" bindtap="inputFunction" data-func="sin">sin</button>
+      <button class="keypad-btn function-btn" bindtap="inputFunction" data-func="cos">cos</button>
+      <button class="keypad-btn function-btn" bindtap="inputFunction" data-func="tan">tan</button>
+      <button class="keypad-btn function-btn" bindtap="inputFunction" data-func="asin">asin</button>
+      <button class="keypad-btn function-btn" bindtap="inputFunction" data-func="acos">acos</button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn function-btn" bindtap="inputFunction" data-func="log">log</button>
+      <button class="keypad-btn function-btn" bindtap="inputFunction" data-func="ln">ln</button>
+      <button class="keypad-btn function-btn" bindtap="inputFunction" data-func="sqrt">√</button>
+      <button class="keypad-btn function-btn" bindtap="inputConstant" data-const="π">π</button>
+      <button class="keypad-btn function-btn" bindtap="inputConstant" data-const="e">e</button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="7">7</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="8">8</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="9">9</button>
+      <button class="keypad-btn operator-btn" bindtap="inputOperator" data-op="÷">÷</button>
+      <button class="keypad-btn function-btn" bindtap="inputFunction" data-func="^">^</button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="4">4</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="5">5</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="6">6</button>
+      <button class="keypad-btn operator-btn" bindtap="inputOperator" data-op="×">×</button>
+      <button class="keypad-btn function-btn" bindtap="toggleAngleMode">
+        {{angleMode === 'deg' ? 'DEG' : 'RAD'}}
+      </button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="1">1</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="2">2</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="3">3</button>
+      <button class="keypad-btn operator-btn" bindtap="inputOperator" data-op="-">-</button>
+      <button class="keypad-btn equals-btn" bindtap="calculate">=</button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn function-btn" bindtap="toggleSign">+/-</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="0">0</button>
+      <button class="keypad-btn number-btn" bindtap="inputDecimal">.</button>
+      <button class="keypad-btn operator-btn" bindtap="inputOperator" data-op="+">+</button>
+      <button class="keypad-btn function-btn" bindtap="showHistory">历史</button>
+    </view>
+  </view>
+  
+  <!-- 程序员模式 -->
+  <view class="keypad-area" wx:if="{{mode === 'programmer'}}">
+    <view class="keypad-row">
+      <button class="keypad-btn function-btn" bindtap="clearAll">C</button>
+      <button class="keypad-btn function-btn" bindtap="deleteLast">⌫</button>
+      <button class="keypad-btn function-btn" bindtap="inputHex" data-hex="A">A</button>
+      <button class="keypad-btn function-btn" bindtap="inputHex" data-hex="B">B</button>
+      <button class="keypad-btn function-btn" bindtap="inputHex" data-hex="C">C</button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn function-btn" bindtap="inputHex" data-hex="D">D</button>
+      <button class="keypad-btn function-btn" bindtap="inputHex" data-hex="E">E</button>
+      <button class="keypad-btn function-btn" bindtap="inputHex" data-hex="F">F</button>
+      <button class="keypad-btn function-btn" bindtap="setNumberSystem" data-system="hex">HEX</button>
+      <button class="keypad-btn function-btn" bindtap="setNumberSystem" data-system="dec">DEC</button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn function-btn" bindtap="setNumberSystem" data-system="oct">OCT</button>
+      <button class="keypad-btn function-btn" bindtap="setNumberSystem" data-system="bin">BIN</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="7">7</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="8">8</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="9">9</button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="4">4</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="5">5</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="6">6</button>
+      <button class="keypad-btn operator-btn" bindtap="inputOperator" data-op="÷">÷</button>
+      <button class="keypad-btn operator-btn" bindtap="inputOperator" data-op="×">×</button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="1">1</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="2">2</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="3">3</button>
+      <button class="keypad-btn operator-btn" bindtap="inputOperator" data-op="-">-</button>
+      <button class="keypad-btn function-btn" bindtap="toggleBits" data-bits="8">8位</button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn function-btn" bindtap="toggleSign">+/-</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="0">0</button>
+      <button class="keypad-btn number-btn" bindtap="inputDecimal">.</button>
+      <button class="keypad-btn operator-btn" bindtap="inputOperator" data-op="+">+</button>
+      <button class="keypad-btn equals-btn" bindtap="calculate">=</button>
+    </view>
+  </view>
+</view>

@@ -1,1 +1,198 @@
-/* pages/calculator/scientific/index.wxss */
+.scientific-page {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  padding-bottom: 100rpx;
+}
+
+.custom-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+  background-color: var(--card-bg);
+  border-bottom: 1rpx solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.back-btn, .home-btn {
+  background: none;
+  border: none;
+  font-size: 36rpx;
+  padding: 0;
+  margin: 0;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.back-btn:active, .home-btn:active {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.nav-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: var(--text-color);
+  flex: 1;
+  text-align: center;
+}
+
+.display-area {
+  margin: 20rpx;
+  background-color: var(--card-bg);
+  border: 2rpx solid var(--border-color);
+  border-radius: 20rpx;
+  padding: 40rpx 30rpx;
+  min-height: 200rpx;
+}
+
+.history-display {
+  min-height: 40rpx;
+  margin-bottom: 20rpx;
+  text-align: right;
+  overflow: hidden;
+  word-break: break-all;
+}
+
+.history-text {
+  font-size: 24rpx;
+  color: #999999;
+  line-height: 1.4;
+}
+
+.main-display {
+  min-height: 60rpx;
+  text-align: right;
+  overflow: hidden;
+  word-break: break-all;
+}
+
+.result-text {
+  font-size: 36rpx;
+  font-weight: 500;
+  color: var(--text-color);
+  line-height: 1.4;
+  display: block;
+  min-height: 50rpx;
+}
+
+.mode-selector {
+  margin: 20rpx 0 30rpx;
+  padding: 0 20rpx;
+}
+
+.mode-buttons {
+  display: flex;
+  background-color: var(--card-bg);
+  border-radius: 20rpx;
+  padding: 4rpx;
+  border: 1rpx solid var(--border-color);
+}
+
+.mode-btn {
+  flex: 1;
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 24rpx;
+  background: none;
+  border: none;
+  border-radius: 16rpx;
+  color: #666666;
+  padding: 0;
+  margin: 0;
+  transition: all 0.3s;
+}
+
+.mode-btn::after {
+  border: none;
+}
+
+.mode-btn.active {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.keypad-area {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  padding: 0 20rpx;
+}
+
+.keypad-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20rpx;
+}
+
+.keypad-btn {
+  flex: 1;
+  height: 80rpx;
+  border-radius: 20rpx;
+  border: none;
+  font-size: 24rpx;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+
+.keypad-btn::after {
+  border: none;
+}
+
+.number-btn {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border: 1rpx solid var(--border-color);
+}
+
+.number-btn:active {
+  background-color: rgba(0, 0, 0, 0.05);
+  transform: scale(0.95);
+}
+
+.operator-btn {
+  background-color: #f0f0f0;
+  color: var(--primary-color);
+  border: 1rpx solid var(--border-color);
+}
+
+.operator-btn:active {
+  background-color: #e0e0e0;
+  transform: scale(0.95);
+}
+
+.function-btn {
+  background-color: #e0e0e0;
+  color: #666666;
+  border: 1rpx solid var(--border-color);
+  font-size: 20rpx;
+}
+
+.function-btn:active {
+  background-color: #d0d0d0;
+  transform: scale(0.95);
+}
+
+.equals-btn {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  font-size: 28rpx;
+}
+
+.equals-btn:active {
+  background-color: #06b155;
+  transform: scale(0.95);
+}
