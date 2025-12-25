@@ -2,7 +2,7 @@
   <!-- 顶部标题栏 -->
   <view class="header">
     <view class="title-section">
-      <text class="app-name">🔧 本地工具集</text>
+      <text class="app-name">🔧 青小主工具集</text>
       <text class="app-desc">轻量实用 · 离线优先 · 隐私保护</text>
     </view>
     <button class="theme-btn" bindtap="toggleTheme">
@@ -158,7 +158,7 @@
   <view class="footer">
     <view class="footer-info">
       <text class="version">v1.0.0</text>
-      <text class="update-time">最后更新: 2024-01-01</text>
+      <text class="update-time">最后更新: 2025-12-23</text>
     </view>
     <view class="footer-links">
       <button class="footer-link" bindtap="openGitHub">GitHub</button>
@@ -167,11 +167,11 @@
       <text class="footer-separator">|</text>
       <button class="footer-link" bindtap="openHelp">使用帮助</button>
     </view>
-    <text class="copyright">© 2024 本地工具集 · 所有计算均在本地完成</text>
+    <text class="copyright">© 2025 青小主工具集 · 所有计算均在本地完成</text>
   </view>
 
   <!-- 欢迎提示 -->
   <view class="welcome-toast {{showWelcome ? 'show' : ''}}">
-    <text>欢迎使用本地工具集！点击图标开始使用</text>
+    <text>欢迎使用青小主工具集！点击图标开始使用</text>
   </view>
 </view>

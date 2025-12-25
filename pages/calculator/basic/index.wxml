@@ -1,2 +1,59 @@
-<!--pages/calculator/basic/index.wxml-->
-<text>pages/calculator/basic/index.wxml</text>
+<view class="calculator-page" data-theme="{{theme}}">
+  <view class="custom-nav">
+    <button class="back-btn" bindtap="goBack">←</button>
+    <!-- <text class="nav-title">基础计算器</text> -->
+    <button class="home-btn" bindtap="goHome">🏠</button>
+  </view>
+
+  <view class="display-area card">
+    <view class="history-display">
+      <text class="history-text">{{history}}</text>
+    </view>
+    <view class="main-display">
+      <text class="result-text">{{current}}</text>
+    </view>
+  </view>
+  
+  <view class="keypad-area">
+    <view class="keypad-row">
+      <button class="keypad-btn function-btn" bindtap="clearEntry">CE</button>
+      <button class="keypad-btn function-btn" bindtap="clearAll">C</button>
+      <button class="keypad-btn function-btn" bindtap="deleteLast">⌫</button>
+      <button class="keypad-btn operator-btn" bindtap="inputOperator" data-op="÷">÷</button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="7">7</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="8">8</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="9">9</button>
+      <button class="keypad-btn operator-btn" bindtap="inputOperator" data-op="×">×</button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="4">4</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="5">5</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="6">6</button>
+      <button class="keypad-btn operator-btn" bindtap="inputOperator" data-op="-">-</button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="1">1</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="2">2</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="3">3</button>
+      <button class="keypad-btn operator-btn" bindtap="inputOperator" data-op="+">+</button>
+    </view>
+    
+    <view class="keypad-row">
+      <button class="keypad-btn number-btn" bindtap="toggleSign">+/-</button>
+      <button class="keypad-btn number-btn" bindtap="inputNumber" data-num="0">0</button>
+      <button class="keypad-btn number-btn" bindtap="inputDecimal">.</button>
+      <button class="keypad-btn equals-btn" bindtap="calculate">=</button>
+    </view>
+    
+    <view class="special-row">
+      <button class="keypad-btn function-btn" bindtap="calculatePercentage">%</button>
+      <button class="keypad-btn function-btn" bindtap="toggleMode">科学</button>
+      <button class="keypad-btn function-btn" bindtap="showHistory">历史</button>
+    </view>
+  </view>
+</view>

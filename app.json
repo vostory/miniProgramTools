@@ -5,12 +5,13 @@
     "pages/calculator/scientific/index",
     "pages/datecalc/index",
     "pages/converter/index",
-    "pages/ocr/index"
+    "pages/ocr/index",
+    "utils"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#ffffff",
-    "navigationBarTitleText": "本地工具集",
+    "navigationBarTitleText": "青小主工具集",
     "navigationBarTextStyle": "black",
     "backgroundColor": "#f8f9fa"
   },

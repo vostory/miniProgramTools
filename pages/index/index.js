@@ -248,7 +248,7 @@ Page({
   // 分享功能
   onShareAppMessage: function() {
     return {
-      title: '本地工具集 - 轻量实用的离线工具',
+      title: '青小主工具集 - 轻量实用的离线工具',
       path: '/pages/index/index',
       imageUrl: '/images/share.png'
     };
@@ -256,7 +256,7 @@ Page({
 
   onShareTimeline: function() {
     return {
-      title: '本地工具集 - 轻量实用的离线工具',
+      title: '青小主工具集 - 轻量实用的离线工具',
       query: 'from=timeline'
     };
   }
