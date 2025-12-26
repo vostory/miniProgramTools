@@ -1,2 +1,158 @@
-<!--pages/datecalc/index.wxml-->
-<text>pages/datecalc/index.wxml</text>
+<view class="datecalc-page" data-theme="{{theme}}">
+  <view class="custom-nav">
+    <button class="back-btn" bindtap="goBack">←</button>
+    <!-- <text class="nav-title">日期计算</text> -->
+    <button class="home-btn" bindtap="goHome">🏠</button>
+  </view>
+
+  <view class="mode-selector">
+    <view class="mode-buttons">
+      <button 
+        class="mode-btn {{mode === 'diff' ? 'active' : ''}}" 
+        bindtap="setMode" 
+        data-mode="diff"
+      >
+        日期差
+      </button>
+      <button 
+        class="mode-btn {{mode === 'add' ? 'active' : ''}}" 
+        bindtap="setMode" 
+        data-mode="add"
+      >
+        日期加减
+      </button>
+      <button 
+        class="mode-btn {{mode === 'workday' ? 'active' : ''}}" 
+        bindtap="setMode" 
+        data-mode="workday"
+      >
+        工作日
+      </button>
+    </view>
+  </view>
+
+  <!-- 日期差计算 -->
+  <view wx:if="{{mode === 'diff'}}" class="calculator-card card">
+    <view class="input-group">
+      <text class="label">开始日期</text>
+      <picker mode="date" value="{{startDate}}" bindchange="onStartDateChange">
+        <view class="date-picker">{{startDate}}</view>
+      </picker>
+    </view>
+    <view class="input-group">
+      <text class="label">结束日期</text>
+      <picker mode="date" value="{{endDate}}" bindchange="onEndDateChange">
+        <view class="date-picker">{{endDate}}</view>
+      </picker>
+    </view>
+    <button class="btn-primary" bindtap="calculateDiff">计算</button>
+    <view class="result" wx:if="{{diffResult}}">
+      <view class="result-item">
+        <text class="result-label">间隔天数:</text>
+        <text class="result-value">{{diffResult.days}} 天</text>
+      </view>
+      <view class="result-item">
+        <text class="result-label">间隔周数:</text>
+        <text class="result-value">{{diffResult.weeks}} 周 {{diffResult.extraDays}} 天</text>
+      </view>
+      <view class="result-item">
+        <text class="result-label">间隔月数:</text>
+        <text class="result-value">{{diffResult.months}} 个月</text>
+      </view>
+      <view class="result-item">
+        <text class="result-label">间隔年数:</text>
+        <text class="result-value">{{diffResult.years}} 年</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 日期加减 -->
+  <view wx:if="{{mode === 'add'}}" class="calculator-card card">
+    <view class="input-group">
+      <text class="label">基准日期</text>
+      <picker mode="date" value="{{baseDate}}" bindchange="onBaseDateChange">
+        <view class="date-picker">{{baseDate}}</view>
+      </picker>
+    </view>
+    <view class="input-row">
+      <input 
+        class="number-input" 
+        type="number" 
+        placeholder="天数" 
+        value="{{addDays}}" 
+        bindinput="onAddDaysChange"
+      />
+      <button class="btn-secondary" bindtap="addDaysCalc" data-days="7">+7天</button>
+      <button class="btn-secondary" bindtap="addDaysCalc" data-days="30">+30天</button>
+    </view>
+    <view class="input-row">
+      <input 
+        class="number-input" 
+        type="number" 
+        placeholder="月数" 
+        value="{{addMonths}}" 
+        bindinput="onAddMonthsChange"
+      />
+      <input 
+        class="number-input" 
+        type="number" 
+        placeholder="年数" 
+        value="{{addYears}}" 
+        bindinput="onAddYearsChange"
+      />
+    </view>
+    <button class="btn-primary" bindtap="calculateAdd">计算</button>
+    <view class="result" wx:if="{{addResult}}">
+      <view class="result-item">
+        <text class="result-label">计算结果:</text>
+        <text class="result-value">{{addResult}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 工作日计算 -->
+  <view wx:if="{{mode === 'workday'}}" class="calculator-card card">
+    <view class="input-group">
+      <text class="label">开始日期</text>
+      <picker mode="date" value="{{workStartDate}}" bindchange="onWorkStartDateChange">
+        <view class="date-picker">{{workStartDate}}</view>
+      </picker>
+    </view>
+    <view class="input-group">
+      <text class="label">结束日期</text>
+      <picker mode="date" value="{{workEndDate}}" bindchange="onWorkEndDateChange">
+        <view class="date-picker">{{workEndDate}}</view>
+      </picker>
+    </view>
+    <button class="btn-primary" bindtap="calculateWorkdays">计算工作日</button>
+    <view class="result" wx:if="{{workdayResult}}">
+      <view class="result-item">
+        <text class="result-label">工作日总数:</text>
+        <text class="result-value">{{workdayResult.totalDays}} 天</text>
+      </view>
+      <view class="result-item">
+        <text class="result-label">周末天数:</text>
+        <text class="result-value">{{workdayResult.weekendDays}} 天</text>
+      </view>
+      <view class="result-item">
+        <text class="result-label">工作日:</text>
+        <text class="result-value">{{workdayResult.workdays}} 天</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 历史记录 -->
+  <view class="history-card card" wx:if="{{history.length > 0}}">
+    <view class="history-header">
+      <text>计算历史</text>
+      <button class="clear-btn" bindtap="clearHistory">清空</button>
+    </view>
+    <view class="history-list">
+      <view class="history-item" wx:for="{{history}}" wx:key="index">
+        <text class="history-content">{{item.data.expression}}</text>
+        <text class="history-result">{{item.data.result}}</text>
+        <text class="history-time">{{item.time}}</text>
+      </view>
+    </view>
+  </view>
+</view>

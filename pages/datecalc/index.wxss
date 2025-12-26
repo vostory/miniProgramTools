@@ -1,1 +1,245 @@
-/* pages/datecalc/index.wxss */
+.datecalc-page {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  padding-bottom: 100rpx;
+}
+
+.custom-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+  background-color: var(--card-bg);
+  border-bottom: 1rpx solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.back-btn, .home-btn {
+  background: none;
+  border: none;
+  font-size: 36rpx;
+  padding: 0;
+  margin: 0;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.back-btn:active, .home-btn:active {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.nav-title {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: var(--text-color);
+  flex: 1;
+  text-align: center;
+}
+
+.mode-selector {
+  margin: 20rpx 0 30rpx;
+  padding: 0 20rpx;
+}
+
+.mode-buttons {
+  display: flex;
+  background-color: var(--card-bg);
+  border-radius: 20rpx;
+  padding: 4rpx;
+  border: 1rpx solid var(--border-color);
+}
+
+.mode-btn {
+  flex: 1;
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 24rpx;
+  background: none;
+  border: none;
+  border-radius: 16rpx;
+  color: #666666;
+  padding: 0;
+  margin: 0;
+  transition: all 0.3s;
+}
+
+.mode-btn::after {
+  border: none;
+}
+
+.mode-btn.active {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.calculator-card {
+  margin: 0 20rpx 20rpx;
+}
+
+.input-group {
+  margin-bottom: 30rpx;
+}
+
+.label {
+  font-size: 24rpx;
+  color: #666666;
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+.date-picker {
+  background-color: var(--card-bg);
+  border: 1rpx solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 20rpx 24rpx;
+  font-size: 28rpx;
+  color: var(--text-color);
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 28rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  width: 100%;
+  margin: 20rpx 0;
+}
+
+.btn-primary::after {
+  border: none;
+}
+
+.btn-secondary {
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  border: 1rpx solid var(--border-color);
+  border-radius: var(--radius);
+  font-size: 24rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  padding: 0 20rpx;
+  margin: 0 10rpx;
+}
+
+.btn-secondary::after {
+  border: none;
+}
+
+.input-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+  gap: 20rpx;
+}
+
+.number-input {
+  flex: 1;
+  background-color: var(--card-bg);
+  border: 1rpx solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 20rpx 24rpx;
+  font-size: 28rpx;
+  color: var(--text-color);
+  text-align: center;
+}
+
+.result {
+  margin-top: 30rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid var(--border-color);
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15rpx;
+  padding: 10rpx 0;
+}
+
+.result-label {
+  font-size: 24rpx;
+  color: #666666;
+}
+
+.result-value {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: var(--primary-color);
+}
+
+.history-card {
+  margin: 0 20rpx;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+  padding-bottom: 10rpx;
+  border-bottom: 1rpx solid var(--border-color);
+  font-size: 28rpx;
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: #ff4d4f;
+  font-size: 24rpx;
+  padding: 0;
+  margin: 0;
+}
+
+.clear-btn::after {
+  border: none;
+}
+
+.history-list {
+  max-height: 300rpx;
+  overflow-y: auto;
+}
+
+.history-item {
+  padding: 15rpx 0;
+  border-bottom: 1rpx solid var(--border-color);
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-content {
+  font-size: 24rpx;
+  color: var(--text-color);
+  display: block;
+  margin-bottom: 5rpx;
+}
+
+.history-result {
+  font-size: 28rpx;
+  color: var(--primary-color);
+  font-weight: 500;
+  display: block;
+  margin-bottom: 5rpx;
+}
+
+.history-time {
+  font-size: 20rpx;
+  color: #999;
+  display: block;
+}
