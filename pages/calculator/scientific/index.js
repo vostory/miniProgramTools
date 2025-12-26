@@ -5,12 +5,18 @@ Page({
   data: {
     theme: 'light',
     expression: '',
-    history: '',
     result: '0',
-    mode: 'basic',
+    history: '',
+    mode: 'scientific',
     angleMode: 'deg',
     numberSystem: 'dec',
-    bits: 32
+    bits: 32,
+    systemNames: {
+      'dec': '十进制',
+      'hex': '十六进制',
+      'oct': '八进制',
+      'bin': '二进制'
+    }
   },
 
   onLoad: function() {
@@ -78,32 +84,33 @@ Page({
 
   inputFunction: function(e) {
     const func = e.currentTarget.dataset.func;
-    const { expression, angleMode } = this.data;
+    const { expression } = this.data;
     
-    let funcToAdd = func;
-    if (func === 'sin' || func === 'cos' || func === 'tan' || 
-        func === 'asin' || func === 'acos' || func === 'atan') {
-      if (angleMode === 'deg') {
-        funcToAdd = 'deg(';
-      } else {
-        funcToAdd = func + '(';
-      }
-    } else {
-      funcToAdd = func;
-    }
-    
-    this.setData({ expression: expression + funcToAdd });
+    this.setData({ expression: expression + func + '(' });
+  },
+
+  inputParenthesis: function(e) {
+    const paren = e.currentTarget.dataset.paren;
+    this.setData({
+      expression: this.data.expression + paren
+    });
+  },
+
+  inputPower: function() {
+    this.setData({
+      expression: this.data.expression + '^'
+    });
+  },
+
+  inputFactorial: function() {
+    this.setData({
+      expression: this.data.expression + '!'
+    });
   },
 
   inputConstant: function(e) {
     const constant = e.currentTarget.dataset.const;
-    const { expression } = this.data;
-    
-    if (constant === 'π') {
-      this.setData({ expression: expression + '3.141592653589793' });
-    } else if (constant === 'e') {
-      this.setData({ expression: expression + '2.718281828459045' });
-    }
+    this.setData({ expression: this.data.expression + constant });
   },
 
   toggleSign: function() {
@@ -125,9 +132,9 @@ Page({
   },
 
   calculate: function() {
-    const { expression, mode, numberSystem, bits } = this.data;
+    const { expression, mode, numberSystem, bits, angleMode } = this.data;
     
-    if (!expression) {
+    if (!expression || expression.trim() === '') {
       wx.showToast({
         title: '请输入表达式',
         icon: 'none'
@@ -137,18 +144,20 @@ Page({
     
     try {
       let result;
+      let formattedResult;
       
       if (mode === 'programmer') {
         result = this.calculateProgrammer(expression, numberSystem, bits);
+        formattedResult = this.formatProgrammerResult(result, numberSystem, bits);
       } else {
-        result = formulaParser.parse(expression, this.data.angleMode);
+        // 使用改进的解析器
+        result = formulaParser.parse(expression, angleMode);
+        formattedResult = this.formatResult(result, mode);
       }
-      
-      const formattedResult = this.formatResult(result, mode, numberSystem, bits);
       
       this.setData({
         result: formattedResult,
-        history: expression + ' ='
+        history: expression + ' = ' + formattedResult
       });
       
       app.saveHistory('calc_scientific_history', {
@@ -191,13 +200,9 @@ Page({
     }
   },
 
-  formatResult: function(result, mode, numberSystem, bits) {
+  formatResult: function(result, mode) {
     if (isNaN(result) || !isFinite(result)) {
       return '计算错误';
-    }
-    
-    if (mode === 'programmer') {
-      return this.formatProgrammerResult(result, numberSystem, bits);
     }
     
     if (Math.abs(result) < 0.000001 && result !== 0) {
@@ -209,6 +214,7 @@ Page({
     }
     
     const fixedResult = Number(result.toFixed(8));
+    
     if (Number.isInteger(fixedResult)) {
       return fixedResult.toString();
     }
@@ -227,7 +233,7 @@ Page({
       return intValue.toString(8);
     } else if (numberSystem === 'bin') {
       let binary = intValue.toString(2);
-      if (bits > 0) {
+      if (bits > 0 && binary.length <= bits) {
         binary = binary.padStart(bits, '0');
       }
       return binary;
@@ -258,7 +264,8 @@ Page({
     this.setData({ 
       mode: mode,
       expression: '',
-      result: '0'
+      result: '0',
+      history: ''
     });
   },
 
@@ -278,18 +285,12 @@ Page({
     this.setData({ 
       numberSystem: system,
       expression: '',
-      result: '0'
+      result: '0',
+      history: ''
     });
     
-    const systemNames = {
-      'dec': '十进制',
-      'hex': '十六进制',
-      'oct': '八进制',
-      'bin': '二进制'
-    };
-    
     wx.showToast({
-      title: systemNames[system],
+      title: this.data.systemNames[system],
       icon: 'none',
       duration: 1000
     });
@@ -317,8 +318,8 @@ Page({
       return;
     }
     
-    const historyItems = history.map(item => 
-      `${item.data.expression} = ${item.data.result}`
+    const historyItems = history.map((item, index) => 
+      `${index + 1}. ${item.data.expression} = ${item.data.result}`
     );
     
     wx.showActionSheet({
