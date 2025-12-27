@@ -153,9 +153,8 @@ Page({
     wx.showModal({
       title: '反馈建议',
       content: '您可以通过以下方式提供反馈：\n\n' +
-              '1. GitHub Issues\n' +
-              '2. 邮件联系\n' +
-              '3. 微信反馈群\n\n' +
+              '1. GitHub:https://github.com/vostory/miniProgramTools\n\n' +
+              '2. 微信反馈群\n\n' +
               '目前功能持续开发中，欢迎提出宝贵建议！',
       showCancel: false,
       confirmText: '我知道了',
@@ -168,7 +167,7 @@ Page({
     wx.showModal({
       title: 'GitHub 仓库',
       content: '项目已开源，欢迎Star和贡献代码！\n\n' +
-              'GitHub: github.com/local-toolkit\n\n' +
+              'GitHub: https://github.com/vostory/miniProgramTools,\n\n' +
               '由于小程序限制，请在浏览器中访问。',
       confirmText: '复制链接',
       cancelText: '取消',
@@ -176,7 +175,7 @@ Page({
       success: (res) => {
         if (res.confirm) {
           wx.setClipboardData({
-            data: 'https://github.com/local-toolkit',
+            data: 'https://github.com/vostory/miniProgramTools',
             success: () => {
               wx.showToast({
                 title: '链接已复制',

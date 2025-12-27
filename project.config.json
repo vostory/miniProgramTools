@@ -33,7 +33,7 @@
   },
   "compileType": "miniprogram",
   "libVersion": "2.19.4",
-  "appid": "wxb111111111111111",
+  "appid": "wxb111111",
   "projectname": "local-toolkit",
   "condition": {},
   "plugins": {

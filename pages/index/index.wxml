@@ -182,7 +182,7 @@
   <view class="footer">
     <view class="footer-info">
       <text class="version">v1.0.0</text>
-      <text class="update-time">最后更新: 2025-12-23</text>
+      <text class="update-time">最后更新: 2025-12-27</text>
     </view>
     <view class="footer-links">
       <button class="footer-link" bindtap="openGitHub">GitHub</button>
