@@ -1,2 +1,151 @@
-<!--pages/converter/index.wxml-->
-<text>pages/converter/index.wxml</text>
+<view class="converter-page" data-theme="{{theme}}">
+  <!-- 顶部导航 -->
+  <view class="custom-nav">
+    <button class="back-btn" bindtap="goBack">←</button>
+    <!-- <text class="nav-title">单位换算</text> -->
+    <button class="home-btn" bindtap="goHome">🏠</button>
+  </view>
+
+  <!-- 换算类型选择 -->
+  <scroll-view class="category-scroll" scroll-x>
+    <view class="category-container">
+      <view 
+        class="category-item {{currentCategory === item.id ? 'active' : ''}}" 
+        wx:for="{{categories}}" 
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="selectCategory"
+      >
+        <text class="category-icon">{{item.icon}}</text>
+        <text class="category-name">{{item.name}}</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 主换算区域 -->
+  <view class="converter-main">
+    <!-- 输入区域 -->
+    <view class="converter-section">
+      <view class="input-group">
+        <view class="input-header">
+          <text class="input-label">输入</text>
+        </view>
+        <input 
+          class="input-field" 
+          type="number" 
+          placeholder="0" 
+          value="{{fromValue}}" 
+          bindinput="onFromValueChange"
+        />
+        <picker 
+          class="unit-picker" 
+          range="{{fromUnits}}" 
+          range-key="name" 
+          value="{{fromUnitIndex}}" 
+          bindchange="onFromUnitChange"
+        >
+          <view class="unit-display">
+            <text class="unit-text">{{fromUnits[fromUnitIndex].name}}</text>
+            <text class="unit-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 转换按钮（去除了椭圆背景） -->
+      <view class="swap-container">
+        <button class="swap-btn" bindtap="swapUnits">
+          <text class="swap-icon">↔</text>
+        </button>
+      </view>
+
+      <!-- 输出区域 -->
+      <view class="input-group">
+        <view class="input-header">
+          <text class="input-label">输出</text>
+        </view>
+        <input 
+          class="input-field" 
+          type="text" 
+          placeholder="0" 
+          value="{{toValue}}" 
+          disabled
+        />
+        <picker 
+          class="unit-picker" 
+          range="{{toUnits}}" 
+          range-key="name" 
+          value="{{toUnitIndex}}" 
+          bindchange="onToUnitChange"
+        >
+          <view class="unit-display">
+            <text class="unit-text">{{toUnits[toUnitIndex].name}}</text>
+            <text class="unit-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <!-- 换算公式显示 -->
+    <view class="formula-section" wx:if="{{formula}}">
+      <text class="formula-text">{{formula}}</text>
+    </view>
+
+    <!-- 常用单位快速选择 -->
+    <view class="quick-section" wx:if="{{quickUnits.length > 0}}">
+      <text class="section-title">常用单位</text>
+      <view class="quick-grid">
+        <button 
+          class="quick-btn" 
+          wx:for="{{quickUnits}}" 
+          wx:key="index"
+          data-unit="{{item.unit}}"
+          data-type="{{item.type}}"
+          bindtap="quickSelectUnit"
+        >
+          <text class="quick-text">{{item.name}}</text>
+        </button>
+      </view>
+    </view>
+
+    <!-- 常用换算 -->
+    <view class="common-section" wx:if="{{commonConversions.length > 0}}">
+      <text class="section-title">常用换算</text>
+      <view class="common-list">
+        <view 
+          class="common-item" 
+          wx:for="{{commonConversions}}" 
+          wx:key="index"
+          bindtap="useCommonConversion"
+          data-index="{{index}}"
+        >
+          <view class="common-left">
+            <text class="common-value">{{item.value}}</text>
+            <text class="common-unit">{{item.fromUnit}}</text>
+          </view>
+          <text class="common-equals">=</text>
+          <view class="common-right">
+            <text class="common-result">{{item.result}}</text>
+            <text class="common-unit">{{item.toUnit}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 历史记录 -->
+  <view class="history-section" wx:if="{{history.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">换算历史</text>
+      <button class="clear-btn" bindtap="clearHistory">清空</button>
+    </view>
+    <scroll-view class="history-list" scroll-y>
+      <view class="history-item" wx:for="{{history}}" wx:key="index">
+        <view class="history-content">
+          <text class="history-expr">{{item.data.expression}}</text>
+          <text class="history-result">{{item.data.result}}</text>
+        </view>
+        <text class="history-time">{{item.time}}</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>
