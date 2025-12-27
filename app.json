@@ -6,7 +6,8 @@
     "pages/datecalc/index",
     "pages/converter/index",
     "pages/ocr/index",
-    "pages/currency/index"
+    "pages/currency/index",
+    "pages/loan/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

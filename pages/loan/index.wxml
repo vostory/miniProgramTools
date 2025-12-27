@@ -1,0 +1,297 @@
+<view class="loan-page" data-theme="{{theme}}">
+  <!-- 顶部导航 -->
+  <view class="custom-nav">
+    <button class="back-btn" bindtap="goBack">←</button>
+    <!-- <text class="nav-title">房贷计算</text> -->
+    <button class="home-btn" bindtap="goHome">🏠</button>
+  </view>
+
+  <!-- 计算类型选择 -->
+  <view class="calc-type-section">
+    <view class="type-buttons">
+      <button 
+        class="type-btn {{calcType === 'commercial' ? 'active' : ''}}" 
+        bindtap="changeCalcType" 
+        data-type="commercial"
+      >
+        商业贷款
+      </button>
+      <button 
+        class="type-btn {{calcType === 'fund' ? 'active' : ''}}" 
+        bindtap="changeCalcType" 
+        data-type="fund"
+      >
+        公积金贷款
+      </button>
+      <button 
+        class="type-btn {{calcType === 'combined' ? 'active' : ''}}" 
+        bindtap="changeCalcType" 
+        data-type="combined"
+      >
+        组合贷款
+      </button>
+    </view>
+  </view>
+
+  <!-- 输入参数区域 -->
+  <view class="input-section">
+    <view class="input-card card">
+      <!-- 贷款总额 -->
+      <view class="input-group">
+        <view class="input-label">
+          <text>贷款总额</text>
+          <text class="input-unit">(万元)</text>
+        </view>
+        <view class="dropdown-container">
+          <picker 
+            class="amount-picker" 
+            range="{{amountOptions}}" 
+            value="{{amountIndex}}" 
+            bindchange="onAmountChange"
+          >
+            <view class="picker-display">
+              <text class="picker-value">{{amountOptions[amountIndex]}} 万元</text>
+              <text class="picker-arrow">▼</text>
+            </view>
+          </picker>
+        </view>
+        <view class="custom-amount" wx:if="{{showCustomAmount}}">
+          <input 
+            class="custom-input" 
+            type="digit" 
+            placeholder="输入自定义金额" 
+            value="{{customAmount}}"
+            bindinput="onCustomAmountChange"
+          />
+        </view>
+      </view>
+
+      <!-- 贷款年限 -->
+      <view class="input-group">
+        <view class="input-label">
+          <text>贷款年限</text>
+          <text class="input-unit">(年)</text>
+        </view>
+        <view class="dropdown-container">
+          <picker 
+            class="years-picker" 
+            range="{{yearsOptions}}" 
+            value="{{yearsIndex}}" 
+            bindchange="onYearsChange"
+          >
+            <view class="picker-display">
+              <text class="picker-value">{{yearsOptions[yearsIndex]}} 年</text>
+              <text class="picker-arrow">▼</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+
+      <!-- 贷款利率 -->
+      <view class="input-group">
+        <view class="input-label">
+          <text>贷款利率</text>
+          <text class="input-unit">(%)</text>
+        </view>
+        <view class="dropdown-container">
+          <picker 
+            class="rate-picker" 
+            range="{{rateOptions}}" 
+            value="{{rateIndex}}" 
+            bindchange="onRateChange"
+          >
+            <view class="picker-display">
+              <text class="picker-value">{{rateOptions[rateIndex]}}%</text>
+              <text class="picker-arrow">▼</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+
+      <!-- 还款方式 -->
+      <view class="input-group">
+        <view class="input-label">
+          <text>还款方式</text>
+        </view>
+        <view class="repayment-buttons">
+          <button 
+            class="repayment-btn {{repaymentType === 'equal' ? 'active' : ''}}" 
+            bindtap="changeRepaymentType" 
+            data-type="equal"
+          >
+            等额本息
+          </button>
+          <button 
+            class="repayment-btn {{repaymentType === 'principal' ? 'active' : ''}}" 
+            bindtap="changeRepaymentType" 
+            data-type="principal"
+          >
+            等额本金
+          </button>
+        </view>
+      </view>
+
+      <!-- 计算按钮 -->
+      <button 
+        class="calc-btn" 
+        bindtap="calculateLoan"
+      >
+        开始计算
+      </button>
+    </view>
+  </view>
+
+  <!-- 计算结果 -->
+  <view class="result-section" wx:if="{{result}}">
+    <view class="result-card card">
+      <view class="result-header">
+        <text class="result-title">计算结果</text>
+      </view>
+
+      <!-- 关键指标 -->
+      <view class="key-metrics">
+        <view class="metric-item">
+          <text class="metric-label">贷款总额</text>
+          <text class="metric-value">{{result.totalLoan}} 万元</text>
+        </view>
+        <view class="metric-item">
+          <text class="metric-label">贷款期限</text>
+          <text class="metric-value">{{result.years}} 年 ({{result.months}} 期)</text>
+        </view>
+        <view class="metric-item">
+          <text class="metric-label">贷款利率</text>
+          <text class="metric-value">{{result.rate}}%</text>
+        </view>
+      </view>
+
+      <!-- 计算结果 -->
+      <view class="calc-results">
+        <view class="result-item">
+          <view class="result-left">
+            <text class="result-name">每月月供</text>
+            <text class="result-desc">{{repaymentType === 'equal' ? '每月还款额相同' : '每月递减'}}</text>
+          </view>
+          <view class="result-right">
+            <text class="result-value">{{result.monthlyPayment}} 元</text>
+            <text class="result-change" wx:if="{{result.monthlyChange && repaymentType === 'principal'}}">
+              每月递减 {{result.monthlyChange}} 元
+            </text>
+          </view>
+        </view>
+
+        <view class="result-divider"></view>
+
+        <view class="result-item">
+          <view class="result-left">
+            <text class="result-name">支付利息</text>
+          </view>
+          <text class="result-value interest-value">{{result.totalInterest}} 元</text>
+        </view>
+
+        <view class="result-item">
+          <view class="result-left">
+            <text class="result-name">还款总额</text>
+          </view>
+          <text class="result-value total-value">{{result.totalPayment}} 元</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 详细还款计划 -->
+    <view class="plan-section" wx:if="{{repaymentPlan.length > 0}}">
+      <view class="plan-header">
+        <text class="plan-title">还款计划表</text>
+        <text class="plan-subtitle">(前12期)</text>
+      </view>
+      <view class="plan-table">
+        <!-- 表头 -->
+        <view class="table-header">
+          <text class="header-cell period-cell">期数</text>
+          <text class="header-cell payment-cell">月供(元)</text>
+          <text class="header-cell principal-cell">本金(元)</text>
+          <text class="header-cell interest-cell">利息(元)</text>
+          <text class="header-cell balance-cell">剩余本金(元)</text>
+        </view>
+        
+        <!-- 表格内容 -->
+        <scroll-view class="table-body" scroll-y>
+          <view 
+            class="table-row" 
+            wx:for="{{repaymentPlan}}" 
+            wx:key="index"
+            data-index="{{index}}"
+            bindtap="showDetail"
+          >
+            <text class="table-cell period-cell">{{item.period}}</text>
+            <text class="table-cell payment-cell">{{item.payment}}</text>
+            <text class="table-cell principal-cell">{{item.principal}}</text>
+            <text class="table-cell interest-cell">{{item.interest}}</text>
+            <text class="table-cell balance-cell">{{item.balance}}</text>
+          </view>
+        </scroll-view>
+      </view>
+      
+      <!-- 查看完整计划按钮 -->
+      <button class="view-full-btn" bindtap="viewFullPlan">
+        查看完整还款计划
+      </button>
+    </view>
+  </view>
+
+  <!-- 历史记录 -->
+  <view class="history-section">
+    <view class="history-card card">
+      <view class="history-header">
+        <text class="history-title">计算历史</text>
+        <button class="clear-btn" bindtap="clearHistory">清空</button>
+      </view>
+      <view wx:if="{{history.length > 0}}">
+        <scroll-view class="history-list" scroll-y>
+          <view 
+            class="history-item" 
+            wx:for="{{history}}" 
+            wx:key="index"
+            data-index="{{index}}"
+            bindtap="loadHistory"
+          >
+            <view class="history-content">
+              <text class="history-amount">{{item.data.amount}}万</text>
+              <text class="history-years">{{item.data.years}}年</text>
+              <text class="history-rate">{{item.data.rate}}%</text>
+              <text class="history-type">{{item.data.type === 'equal' ? '等额本息' : '等额本金'}}</text>
+            </view>
+            <view class="history-result">
+              <text class="history-monthly">月供: {{item.data.monthlyPayment}}元</text>
+              <text class="history-total">总利息: {{item.data.totalInterest}}元</text>
+            </view>
+            <text class="history-time">{{item.time}}</text>
+          </view>
+        </scroll-view>
+      </view>
+      <view wx:else>
+        <view class="empty-history">
+          <text>暂无历史记录</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 说明信息 -->
+  <view class="info-section">
+    <view class="info-card card">
+      <view class="info-header">
+        <text class="info-title">还款方式说明</text>
+      </view>
+      <view class="info-content">
+        <view class="info-item">
+          <text class="info-label">等额本息：</text>
+          <text class="info-text">每月还款金额相同，前期利息多本金少，后期利息少本金多</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">等额本金：</text>
+          <text class="info-text">每月还款本金相同，利息逐月减少，月供逐月递减</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

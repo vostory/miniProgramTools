@@ -92,11 +92,17 @@
     </navigator>
     <!-- </view> -->
 
-    <view class="tool-card coming-soon" bindtap="showComingSoon">
+    <!-- <view class="tool-card coming-soon" bindtap="showComingSoon"> -->
+    <navigator 
+      class="tool-card" 
+      url="/pages/loan/index" 
+      hover-class="tool-hover"
+    >
       <view class="tool-icon">📈</view>
       <text class="tool-name">房贷计算</text>
       <text class="tool-desc">贷款、利息计算</text>
-    </view>
+    </navigator>
+    <!-- </view> -->
 
     <view class="tool-card coming-soon" bindtap="showComingSoon">
       <view class="tool-icon">🧮</view>
