@@ -104,11 +104,17 @@
     </navigator>
     <!-- </view> -->
 
-    <view class="tool-card coming-soon" bindtap="showComingSoon">
+    <!-- <view class="tool-card coming-soon" bindtap="showComingSoon"> -->
+      <navigator 
+      class="tool-card" 
+      url="/pages/base/index" 
+      hover-class="tool-hover"
+    >
       <view class="tool-icon">🧮</view>
       <text class="tool-name">进制转换</text>
       <text class="tool-desc">二进制、十六进制等</text>
-    </view>
+    <!-- </view> -->
+  </navigator>
 
     <view class="tool-card coming-soon" bindtap="showComingSoon">
       <view class="tool-icon">📋</view>

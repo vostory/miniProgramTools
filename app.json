@@ -7,7 +7,8 @@
     "pages/converter/index",
     "pages/ocr/index",
     "pages/currency/index",
-    "pages/loan/index"
+    "pages/loan/index",
+    "pages/base/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

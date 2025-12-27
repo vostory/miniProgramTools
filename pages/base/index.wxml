@@ -1,0 +1,252 @@
+<view class="base-page" data-theme="{{theme}}">
+  <!-- 顶部导航 -->
+  <view class="custom-nav">
+    <button class="back-btn" bindtap="goBack">←</button>
+    <!-- <text class="nav-title">进制转换</text> -->
+    <button class="home-btn" bindtap="goHome">🏠</button>
+  </view>
+
+  <!-- 输入区域 -->
+  <view class="input-section">
+    <view class="input-card card">
+      <!-- 输入数值 -->
+      <view class="input-group">
+        <view class="input-label">
+          <text>输入数值</text>
+        </view>
+        <input 
+          class="value-input" 
+          placeholder="请输入数值" 
+          value="{{inputValue}}"
+          bindinput="onInputChange"
+          bindblur="validateInput"
+        />
+        <view class="input-hint" wx:if="{{inputError}}">
+          <text class="hint-text">{{inputError}}</text>
+        </view>
+      </view>
+
+      <!-- 输入进制选择 -->
+      <view class="input-group">
+        <view class="input-label">
+          <text>输入进制</text>
+        </view>
+        <view class="dropdown-container">
+          <picker 
+            class="base-picker" 
+            range="{{baseOptions}}" 
+            range-key="name" 
+            value="{{fromBaseIndex}}" 
+            bindchange="changeFromBase"
+          >
+            <view class="picker-display">
+              <text class="picker-text">{{baseOptions[fromBaseIndex].name}}</text>
+              <text class="picker-arrow">▼</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+
+      <!-- 目标进制选择 -->
+      <view class="input-group">
+        <view class="input-label">
+          <text>转换到</text>
+        </view>
+        <view class="dropdown-container">
+          <picker 
+            class="base-picker" 
+            range="{{baseOptions}}" 
+            range-key="name" 
+            value="{{toBaseIndex}}" 
+            bindchange="changeToBase"
+          >
+            <view class="picker-display">
+              <text class="picker-text">{{baseOptions[toBaseIndex].name}}</text>
+              <text class="picker-arrow">▼</text>
+            </view>
+          </picker>
+        </view>
+      </view>
+
+      <!-- 交换按钮 -->
+      <view class="swap-container">
+        <button class="swap-btn" bindtap="swapBases">
+          <text class="swap-icon">⇄ 交换</text>
+        </button>
+      </view>
+
+      <!-- 转换按钮 -->
+      <button 
+        class="convert-btn" 
+        bindtap="convertBase"
+        disabled="{{!inputValue || inputError}}"
+      >
+        立即转换
+      </button>
+    </view>
+  </view>
+
+  <!-- 转换结果 -->
+  <view class="result-section" wx:if="{{result}}">
+    <view class="result-card card">
+      <view class="result-header">
+        <text class="result-title">转换结果</text>
+      </view>
+
+      <!-- 输入信息 -->
+      <view class="result-info">
+        <view class="info-item">
+          <text class="info-label">输入数值：</text>
+          <text class="info-value">{{inputValue}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">输入进制：</text>
+          <text class="info-value">{{fromBaseName}}</text>
+        </view>
+      </view>
+
+      <!-- 转换箭头 -->
+      <view class="arrow-container">
+        <text class="arrow-text">↓</text>
+      </view>
+
+      <!-- 输出信息 -->
+      <view class="result-info">
+        <view class="info-item">
+          <text class="info-label">输出数值：</text>
+          <text class="info-value output-value">{{result.value}}</text>
+        </view>
+        <view class="info-item">
+          <text class="info-label">输出进制：</text>
+          <text class="info-value">{{toBaseName}}</text>
+        </view>
+      </view>
+
+      <!-- 结果详情 -->
+      <view class="result-details">
+        <view class="detail-item">
+          <text class="detail-label">转换公式：</text>
+          <text class="detail-value">{{result.formula}}</text>
+        </view>
+        <view class="detail-item">
+          <text class="detail-label">计算过程：</text>
+          <text class="detail-value">{{result.process}}</text>
+        </view>
+      </view>
+
+      <!-- 复制按钮 -->
+      <button class="copy-btn" bindtap="copyResult">
+        复制结果
+      </button>
+    </view>
+  </view>
+
+  <!-- 进制表示法说明 -->
+  <view class="notation-section">
+    <view class="notation-card card">
+      <view class="notation-header">
+        <text class="notation-title">进制表示法</text>
+      </view>
+      <view class="notation-content">
+        <view class="notation-item">
+          <text class="notation-base">二进制 (2)</text>
+          <text class="notation-desc">使用数字 0 和 1 表示</text>
+        </view>
+        <view class="notation-item">
+          <text class="notation-base">八进制 (8)</text>
+          <text class="notation-desc">使用数字 0-7 表示</text>
+        </view>
+        <view class="notation-item">
+          <text class="notation-base">十进制 (10)</text>
+          <text class="notation-desc">使用数字 0-9 表示</text>
+        </view>
+        <view class="notation-item">
+          <text class="notation-base">十六进制 (16)</text>
+          <text class="notation-desc">使用数字 0-9 和字母 A-F 表示</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 进制对应表 -->
+  <view class="table-section" wx:if="{{baseTable.length > 0}}">
+    <view class="table-card card">
+      <view class="table-header">
+        <text class="table-title">进制对应表 (0-15)</text>
+      </view>
+      <view class="base-table">
+        <view class="table-row">
+          <text class="table-cell header">十进制</text>
+          <text class="table-cell header">二进制</text>
+          <text class="table-cell header">八进制</text>
+          <text class="table-cell header">十六进制</text>
+        </view>
+        <view 
+          class="table-row" 
+          wx:for="{{baseTable}}" 
+          wx:key="index"
+        >
+          <text class="table-cell">{{item.decimal}}</text>
+          <text class="table-cell">{{item.binary}}</text>
+          <text class="table-cell">{{item.octal}}</text>
+          <text class="table-cell">{{item.hex}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 历史记录 -->
+  <view class="history-section" wx:if="{{history.length > 0}}">
+    <view class="history-card card">
+      <view class="history-header">
+        <text class="history-title">转换历史</text>
+        <button class="clear-btn" bindtap="clearHistory">清空</button>
+      </view>
+      <scroll-view class="history-list" scroll-y>
+        <view 
+          class="history-item" 
+          wx:for="{{history}}" 
+          wx:key="index"
+          data-index="{{index}}"
+          bindtap="loadHistoryItem"
+        >
+          <view class="history-content">
+            <text class="history-from">{{item.data.inputValue}}<sub>{{item.data.fromBase}}</sub></text>
+            <text class="history-arrow">=</text>
+            <text class="history-to">{{item.data.result}}<sub>{{item.data.toBase}}</sub></text>
+          </view>
+          <view class="history-info">
+            <text class="history-time">{{item.time}}</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 说明信息 -->
+  <view class="info-section">
+    <view class="info-card card">
+      <view class="info-header">
+        <text class="info-title">使用说明</text>
+      </view>
+      <view class="info-content">
+        <view class="info-item">
+          <text class="info-dot">•</text>
+          <text class="info-text">支持二进制、八进制、十进制、十六进制之间的相互转换</text>
+        </view>
+        <view class="info-item">
+          <text class="info-dot">•</text>
+          <text class="info-text">十六进制可以使用大写或小写字母（A-F 或 a-f）</text>
+        </view>
+        <view class="info-item">
+          <text class="info-dot">•</text>
+          <text class="info-text">点击"交换"按钮可以快速交换输入和目标进制</text>
+        </view>
+        <view class="info-item">
+          <text class="info-dot">•</text>
+          <text class="info-text">所有转换历史仅保存在本地设备中</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
