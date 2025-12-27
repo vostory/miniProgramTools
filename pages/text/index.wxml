@@ -8,42 +8,19 @@
 
   <!-- 处理类型选择 -->
   <view class="type-section">
-    <view class="type-buttons">
-      <button 
-        class="type-btn {{formatType === 'json' ? 'active' : ''}}" 
-        data-type="json"
-        bindtap="changeFormatType"
+    <view class="type-dropdown">
+      <picker 
+        class="type-picker" 
+        range="{{formatTypes}}" 
+        range-key="name" 
+        value="{{formatTypeIndex}}" 
+        bindchange="changeFormatType"
       >
-        JSON格式化
-      </button>
-      <button 
-        class="type-btn {{formatType === 'xml' ? 'active' : ''}}" 
-        data-type="xml"
-        bindtap="changeFormatType"
-      >
-        XML格式化
-      </button>
-      <button 
-        class="type-btn {{formatType === 'yaml' ? 'active' : ''}}" 
-        data-type="yaml"
-        bindtap="changeFormatType"
-      >
-        YAML格式化
-      </button>
-      <button 
-        class="type-btn {{formatType === 'markdown' ? 'active' : ''}}" 
-        data-type="markdown"
-        bindtap="changeFormatType"
-      >
-        Markdown
-      </button>
-      <button 
-        class="type-btn {{formatType === 'html' ? 'active' : ''}}" 
-        data-type="html"
-        bindtap="changeFormatType"
-      >
-        HTML格式化
-      </button>
+        <view class="picker-display">
+          <text class="picker-text">{{formatTypes[formatTypeIndex].name}}</text>
+          <text class="picker-arrow">▼</text>
+        </view>
+      </picker>
     </view>
   </view>
 
@@ -80,7 +57,7 @@
       </view>
 
       <!-- 格式化选项 -->
-      <view class="format-options" wx:if="{{formatType === 'json'}}">
+      <view class="format-options" wx:if="{{currentFormatType.value === 'json'}}">
         <view class="options-group">
           <checkbox-group bindchange="toggleOption">
             <label class="option-item">
@@ -103,6 +80,26 @@
         </view>
       </view>
 
+      <!-- 预览选项 -->
+      <view class="preview-options" wx:if="{{currentFormatType.value === 'markdown' || currentFormatType.value === 'html'}}">
+        <view class="preview-buttons">
+          <button 
+            class="preview-btn {{viewMode === 'source' ? 'active' : ''}}" 
+            data-mode="source"
+            bindtap="changeViewMode"
+          >
+            源代码
+          </button>
+          <button 
+            class="preview-btn {{viewMode === 'preview' ? 'active' : ''}}" 
+            data-mode="preview"
+            bindtap="changeViewMode"
+          >
+            预览
+          </button>
+        </view>
+      </view>
+
       <!-- 处理按钮 -->
       <button 
         class="process-btn" 
@@ -118,7 +115,7 @@
   <view class="result-section" wx:if="{{resultText}}">
     <view class="result-card card">
       <view class="result-header">
-        <text class="result-title">处理结果</text>
+        <text class="result-title">{{viewMode === 'preview' && (currentFormatType.value === 'markdown' || currentFormatType.value === 'html') ? '预览结果' : '处理结果'}}</text>
         <view class="result-actions">
           <button class="copy-btn" bindtap="copyResult">复制</button>
           <button class="clear-btn" bindtap="clearResult">清空</button>
@@ -128,12 +125,29 @@
       <!-- 结果显示 -->
       <view class="result-group">
         <view class="result-label">
-          <text>格式化结果</text>
+          <text>{{viewMode === 'preview' ? '预览' : '结果'}}</text>
           <text class="result-counter">{{resultText.length}} 字符</text>
         </view>
-        <scroll-view class="result-container" scroll-y>
-          <view class="result-content {{formatType}}">
+        
+        <!-- 源代码视图 -->
+        <scroll-view 
+          class="result-container" 
+          scroll-y 
+          wx:if="{{viewMode === 'source' || currentFormatType.value === 'json' || currentFormatType.value === 'xml' || currentFormatType.value === 'yaml'}}"
+        >
+          <view class="result-content {{currentFormatType.value}}">
             <text class="result-text">{{resultText}}</text>
+          </view>
+        </scroll-view>
+        
+        <!-- 预览视图 -->
+        <scroll-view 
+          class="preview-container" 
+          scroll-y 
+          wx:if="{{viewMode === 'preview' && (currentFormatType.value === 'markdown' || currentFormatType.value === 'html')}}"
+        >
+          <view class="preview-content {{currentFormatType.value}}">
+            <rich-text nodes="{{previewNodes}}"></rich-text>
           </view>
         </scroll-view>
       </view>

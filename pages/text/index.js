@@ -1,11 +1,22 @@
 const app = getApp();
 const textFormatter = require('../../utils/textFormatter.js');
+const Towxml = require('../../towxml/parse.js');
 
 Page({
   data: {
     theme: 'light',
-    // 格式化类型
-    formatType: 'json',
+    // 格式化类型选项
+    formatTypes: [
+      { value: 'json', name: 'JSON格式化' },
+      { value: 'xml', name: 'XML格式化' },
+      { value: 'yaml', name: 'YAML格式化' },
+      { value: 'markdown', name: 'Markdown格式化' },
+      { value: 'html', name: 'HTML格式化' }
+    ],
+    // 当前选中的类型索引
+    formatTypeIndex: 0,
+    // 当前选中的类型对象
+    currentFormatType: { value: 'json', name: 'JSON格式化' },
     // 输入文本
     inputText: '',
     maxLength: 5000,
@@ -13,6 +24,11 @@ Page({
     resultText: '',
     processInfo: '',
     isProcessing: false,
+    // 预览相关
+    viewMode: 'source', // source, preview
+    previewNodes: [],
+    // towxml实例
+    towxml: null,
     // JSON格式化选项
     indentSpaces: 2,
     sortKeys: false,
@@ -31,6 +47,9 @@ Page({
       theme: app.globalData.theme
     });
     
+    // 初始化towxml
+    this.initTowxml();
+    
     // 加载帮助信息
     this.loadHelpInfo();
     
@@ -43,6 +62,11 @@ Page({
     this.setData({
       theme: app.globalData.theme
     });
+    
+    // 更新towxml主题
+    if (this.data.towxml) {
+      this.data.towxml.options.theme = this.data.theme;
+    }
   },
 
   goBack: function() {
@@ -55,10 +79,60 @@ Page({
     });
   },
 
+  // 初始化towxml
+  initTowxml: function() {
+    const towxml = new Towxml({
+      theme: this.data.theme,
+      base: '',
+      events: {
+        tap: (e) => {
+          this.onPreviewTap(e);
+        }
+      },
+      supportCustomStyle: true
+    });
+    
+    console.log('Towxml 初始化完成');
+    this.setData({ towxml: towxml });
+  },
+
+  // 预览点击事件
+  onPreviewTap: function(e) {
+    console.log('预览点击事件:', e);
+    
+    const { type, data } = e.detail || {};
+    
+    if (type === 'link' || (data && data.href)) {
+      const url = data?.url || data?.href;
+      if (url && url !== '#') {
+        wx.showModal({
+          title: '打开链接',
+          content: url,
+          confirmText: '复制链接',
+          cancelText: '取消',
+          success: (res) => {
+            if (res.confirm) {
+              wx.setClipboardData({
+                data: url,
+                success: () => {
+                  wx.showToast({
+                    title: '链接已复制',
+                    icon: 'success',
+                    duration: 1000
+                  });
+                }
+              });
+            }
+          }
+        });
+      }
+    }
+  },
+
   // 加载帮助信息
   loadHelpInfo: function() {
-    const { formatType } = this.data;
-    this.updateHelpInfo(formatType);
+    const { currentFormatType } = this.data;
+    this.updateHelpInfo(currentFormatType.value);
   },
 
   // 更新帮助信息
@@ -96,8 +170,9 @@ Page({
         items: [
           'Markdown是一种轻量级标记语言，用于编写文档',
           '支持标题、列表、代码块、表格等格式',
-          '自动美化Markdown语法',
-          '支持GFM（GitHub Flavored Markdown）扩展'
+          '支持源代码和预览两种视图',
+          '点击预览中的链接可复制链接地址',
+          '使用towxml库进行解析和渲染'
         ]
       },
       'html': {
@@ -105,8 +180,9 @@ Page({
         items: [
           'HTML（超文本标记语言）用于创建网页',
           '支持格式化、压缩、验证等操作',
+          '支持源代码和预览两种视图',
           '自动缩进和标签对齐',
-          '保留内联样式和脚本'
+          '使用towxml库进行解析和渲染'
         ]
       }
     };
@@ -120,19 +196,97 @@ Page({
 
   // 切换格式化类型
   changeFormatType: function(e) {
-    if (!e) return;
+    if (!e || !e.detail) {
+      console.error('changeFormatType: 事件对象或detail为空');
+      return;
+    }
     
-    const type = e.currentTarget ? e.currentTarget.dataset.type : e.target.dataset.type;
-    console.log('切换格式化类型:', type);
+    const index = e.detail.value;
+    const selectedType = this.data.formatTypes[index];
+    
+    console.log('切换格式化类型:', index, selectedType);
     
     this.setData({
-      formatType: type,
+      formatTypeIndex: index,
+      currentFormatType: selectedType,
       resultText: '',
-      processInfo: ''
+      processInfo: '',
+      viewMode: 'source',
+      previewNodes: []
     });
     
     // 更新帮助信息
-    this.updateHelpInfo(type);
+    this.updateHelpInfo(selectedType.value);
+  },
+
+  // 切换视图模式
+  changeViewMode: function(e) {
+    if (!e) return;
+    
+    const mode = e.currentTarget ? e.currentTarget.dataset.mode : e.target.dataset.mode;
+    console.log('切换视图模式:', mode);
+    
+    this.setData({ viewMode: mode });
+    
+    // 如果需要预览且还未生成预览节点，则生成
+    if (mode === 'preview' && this.data.resultText && 
+        (this.data.currentFormatType.value === 'markdown' || this.data.currentFormatType.value === 'html') && 
+        this.data.previewNodes.length === 0) {
+      this.generatePreview();
+    }
+  },
+
+  // 生成预览
+  generatePreview: function() {
+    const { currentFormatType, resultText, towxml } = this.data;
+    
+    if (!resultText || !towxml) {
+      console.log('无法生成预览：缺少结果文本或towxml实例');
+      return;
+    }
+    
+    console.log('生成预览，类型:', currentFormatType.value);
+    
+    try {
+      let parsedData = null;
+      
+      if (currentFormatType.value === 'markdown') {
+        parsedData = towxml.toMarkdown(resultText);
+      } else if (currentFormatType.value === 'html') {
+        parsedData = towxml.toHtml(resultText);
+      }
+      
+      console.log('解析结果:', parsedData);
+      
+      if (parsedData && !parsedData.error) {
+        const nodes = towxml.toWxml(parsedData);
+        console.log('生成的节点:', nodes);
+        this.setData({ previewNodes: nodes });
+      } else {
+        this.setData({ 
+          previewNodes: [{ 
+            name: 'view', 
+            attrs: { class: 'error' }, 
+            children: [{ 
+              type: 'text', 
+              text: parsedData?.error || '预览生成失败' 
+            }] 
+          }] 
+        });
+      }
+    } catch (error) {
+      console.error('生成预览失败:', error);
+      this.setData({ 
+        previewNodes: [{ 
+          name: 'view', 
+          attrs: { class: 'error' }, 
+          children: [{ 
+            type: 'text', 
+            text: '预览生成失败: ' + error.message 
+          }] 
+        }] 
+      });
+    }
   },
 
   // 输入变化
@@ -177,16 +331,18 @@ Page({
     this.setData({
       inputText: '',
       resultText: '',
-      processInfo: ''
+      processInfo: '',
+      viewMode: 'source',
+      previewNodes: []
     });
   },
 
   // 加载示例
   loadSample: function() {
-    const { formatType } = this.data;
+    const { currentFormatType } = this.data;
     let sampleText = '';
     
-    switch (formatType) {
+    switch (currentFormatType.value) {
       case 'json':
         sampleText = JSON.stringify({
           name: "文本处理工具",
@@ -273,6 +429,8 @@ function greet(name) {
 | 张三 | 25  | 北京 |
 | 李四 | 30  | 上海 |
 | 王五 | 28  | 广州 |
+
+[这是一个链接](https://example.com)
 `;
         break;
         
@@ -302,6 +460,7 @@ function greet(name) {
         <li>支持标签缩进</li>
         <li>支持属性对齐</li>
       </ul>
+      <p>访问<a href="https://example.com">示例网站</a>获取更多信息。</p>
     </main>
   </div>
 </body>
@@ -347,7 +506,8 @@ function greet(name) {
 
   // 处理文本
   processText: function() {
-    const { inputText, formatType, indentSpaces, sortKeys } = this.data;
+    const { inputText, currentFormatType, indentSpaces, sortKeys } = this.data;
+    const formatType = currentFormatType.value;
     
     console.log('开始处理文本，类型:', formatType);
     
@@ -360,7 +520,11 @@ function greet(name) {
       return;
     }
     
-    this.setData({ isProcessing: true });
+    this.setData({ 
+      isProcessing: true,
+      viewMode: 'source',
+      previewNodes: []
+    });
     
     // 显示加载
     wx.showLoading({
@@ -435,8 +599,13 @@ function greet(name) {
         processInfo: info
       });
       
+      // 如果是Markdown或HTML，自动生成预览
+      if (formatType === 'markdown' || formatType === 'html') {
+        this.generatePreview();
+      }
+      
       // 保存到历史记录
-      this.saveToHistory(inputText, formatType, result, info);
+      this.saveToHistory(inputText, currentFormatType.name, result, info);
       
       wx.hideLoading();
       wx.showToast({
@@ -498,19 +667,21 @@ function greet(name) {
   clearResult: function() {
     this.setData({
       resultText: '',
-      processInfo: ''
+      processInfo: '',
+      viewMode: 'source',
+      previewNodes: []
     });
   },
 
   // 保存到历史记录
-  saveToHistory: function(inputText, type, result, info) {
+  saveToHistory: function(inputText, typeName, result, info) {
     if (!inputText || !result) return;
     
     // 生成预览文本
     const preview = inputText.length > 50 ? inputText.substring(0, 50) + '...' : inputText;
     
     const historyData = {
-      type: type,
+      type: typeName,
       input: inputText,
       result: result,
       preview: preview,
@@ -542,16 +713,42 @@ function greet(name) {
       
       console.log('加载历史记录项:', item.type);
       
+      // 查找对应的类型索引
+      const typeIndex = this.data.formatTypes.findIndex(formatType => 
+        formatType.name === item.type
+      );
+      
+      if (typeIndex === -1) {
+        // 如果没有找到对应的类型，使用默认的第一个类型
+        this.setData({
+          formatTypeIndex: 0,
+          currentFormatType: this.data.formatTypes[0]
+        });
+      } else {
+        this.setData({
+          formatTypeIndex: typeIndex,
+          currentFormatType: this.data.formatTypes[typeIndex]
+        });
+      }
+      
       // 设置参数
       this.setData({
-        formatType: item.type,
         inputText: item.input,
         resultText: item.result,
-        processInfo: item.info || ''
+        processInfo: item.info || '',
+        viewMode: 'source',
+        previewNodes: []
       });
       
       // 更新帮助信息
-      this.updateHelpInfo(item.type);
+      this.updateHelpInfo(this.data.currentFormatType.value);
+      
+      // 如果是Markdown或HTML，生成预览
+      if (this.data.currentFormatType.value === 'markdown' || this.data.currentFormatType.value === 'html') {
+        setTimeout(() => {
+          this.generatePreview();
+        }, 100);
+      }
       
       wx.showToast({
         title: '已加载历史记录',

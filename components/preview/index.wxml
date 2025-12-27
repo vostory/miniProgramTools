@@ -1,0 +1,29 @@
+<view class="preview-container">
+  <!-- 空状态 -->
+  <view class="preview-empty" wx:if="{{!nodes || nodes.length === 0}}">
+    <view class="empty-icon">📄</view>
+    <text class="empty-text">{{emptyText}}</text>
+  </view>
+  
+  <!-- 错误状态 -->
+  <view class="preview-error" wx:elif="{{error}}">
+    <view class="error-icon">❌</view>
+    <text class="error-text">{{error}}</text>
+  </view>
+  
+  <!-- 预览内容 -->
+  <view class="preview-content" wx:else>
+    <!-- 使用 rich-text 渲染节点 -->
+    <rich-text 
+      nodes="{{nodes}}" 
+      class="preview-rich-text"
+      bindtap="onNodeTap"
+    />
+  </view>
+  
+  <!-- 加载状态 -->
+  <view class="preview-loading" wx:if="{{loading}}">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">{{loadingText}}</text>
+  </view>
+</view>
