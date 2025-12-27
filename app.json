@@ -10,12 +10,11 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#ffffff",
-    "navigationBarTitleText": "青小主工具集",
+    "navigationBarTitleText": "本地工具集",
     "navigationBarTextStyle": "black",
     "backgroundColor": "#f8f9fa"
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json",
-  "lazyCodeLoading": "requiredComponents",
-  "cloud": true
+  "lazyCodeLoading": "requiredComponents"
 }

@@ -1,35 +1,45 @@
 {
-  "compileType": "miniprogram",
-  "simulatorPluginLibVersion": {},
-  "appid": "wxb3a123456789",
-  "libVersion": "3.12.1",
+  "description": "本地工具集小程序",
   "setting": {
-    "es6": false,
-    "postcss": false,
-    "compileWorklet": false,
-    "minified": false,
-    "uglifyFileName": false,
+    "urlCheck": true,
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "newFeature": true,
+    "coverView": true,
+    "nodeModules": false,
+    "checkInvalidKey": true,
+    "checkSiteMap": true,
     "uploadWithSourceMap": true,
-    "enhance": false,
-    "packNpmManually": false,
-    "packNpmRelationList": [],
-    "minifyWXSS": true,
-    "minifyWXML": true,
-    "localPlugins": false,
-    "disableUseStrict": false,
-    "useCompilerPlugins": false,
-    "condition": false,
-    "swc": false,
-    "disableSWC": true,
+    "compileHotReLoad": false,
+    "lazyloadPlaceholderEnable": false,
+    "useMultiFrameRuntime": true,
+    "useApiHook": true,
+    "useApiHostProcess": true,
     "babelSetting": {
       "ignore": [],
       "disablePlugins": [],
       "outputPath": ""
+    },
+    "enableEngineNative": false,
+    "useIsolateContext": true,
+    "userConfirmedBundleSwitch": false,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "disableUseStrict": false,
+    "minifyWXML": true
+  },
+  "compileType": "miniprogram",
+  "libVersion": "2.19.4",
+  "appid": "wxb1234567",
+  "projectname": "local-toolkit",
+  "condition": {},
+  "plugins": {
+    "ocrPlugin": {
+      "version": "2.4.0",
+      "provider": "wx79ac3de8be320b71"
     }
-  },
-  "packOptions": {
-    "ignore": [],
-    "include": []
-  },
-  "editorSetting": {}
+  }
 }

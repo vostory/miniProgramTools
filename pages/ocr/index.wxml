@@ -1,2 +1,167 @@
-<!--pages/ocr/index.wxml-->
-<text>pages/ocr/index.wxml</text>
+<view class="ocr-page" data-theme="{{theme}}">
+  <view class="custom-nav">
+    <button class="back-btn" bindtap="goBack">←</button>
+    <!-- <text class="nav-title">证件识别</text> -->
+    <button class="home-btn" bindtap="goHome">🏠</button>
+  </view>
+
+  <!-- 证件类型选择 -->
+  <view class="type-section">
+    <view class="type-buttons">
+      <button 
+        class="type-btn {{cardType === 'idcard_front' ? 'active' : ''}}" 
+        bindtap="selectCardType" 
+        data-type="idcard_front"
+      >
+        <view class="type-icon">🆔</view>
+        <text class="type-name">身份证正面</text>
+      </button>
+      <button 
+        class="type-btn {{cardType === 'idcard_back' ? 'active' : ''}}" 
+        bindtap="selectCardType" 
+        data-type="idcard_back"
+      >
+        <view class="type-icon">🆔</view>
+        <text class="type-name">身份证反面</text>
+      </button>
+      <button 
+        class="type-btn {{cardType === 'bankcard' ? 'active' : ''}}" 
+        bindtap="selectCardType" 
+        data-type="bankcard"
+      >
+        <view class="type-icon">💳</view>
+        <text class="type-name">银行卡</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 使用说明 -->
+  <view class="tip-card card">
+    <view class="tip-header">
+      <text class="tip-title">📋 使用说明</text>
+    </view>
+    <view class="tip-content">
+      <text class="tip-text">
+        1. 请选择正确的证件类型\n
+        2. 确保照片清晰、无反光\n
+        3. 拍摄时请将证件置于纯色背景上\n
+        4. 支持手动修改识别结果
+      </text>
+    </view>
+  </view>
+
+  <!-- 图片选择和预览 -->
+  <view class="upload-section">
+    <view class="upload-card card">
+      <view class="upload-header">
+        <text class="upload-title">📷 选择图片</text>
+      </view>
+      
+      <view class="image-preview" wx:if="{{imagePath}}">
+        <image class="preview-image" src="{{imagePath}}" mode="aspectFit" bindload="onImageLoad" />
+        <button class="delete-btn" bindtap="clearImage">✕</button>
+      </view>
+      
+      <view class="upload-buttons" wx:if="{{!imagePath}}">
+        <button class="upload-btn camera-btn" bindtap="takePhoto">
+          <view class="btn-icon">📸</view>
+          <text class="btn-text">拍照</text>
+        </button>
+        <button class="upload-btn album-btn" bindtap="chooseImage">
+          <view class="btn-icon">🖼️</view>
+          <text class="btn-text">相册</text>
+        </button>
+      </view>
+      
+      <button 
+        class="recognize-btn" 
+        bindtap="startRecognize" 
+        disabled="{{!imagePath || isProcessing}}"
+      >
+        {{isProcessing ? '识别中...' : '开始识别'}}
+      </button>
+    </view>
+  </view>
+
+  <!-- 识别结果 -->
+  <view class="result-section" wx:if="{{result}}">
+    <view class="result-card card">
+      <view class="result-header">
+        <text class="result-title">✅ 识别结果</text>
+        <button class="copy-btn" bindtap="copyAllResult">复制全部</button>
+      </view>
+      
+      <view class="result-content">
+        <view class="result-item" wx:for="{{resultItems}}" wx:key="index">
+          <text class="result-label">{{item.label}}：</text>
+          <input 
+            class="result-value {{item.error ? 'error' : ''}}" 
+            value="{{item.value}}" 
+            placeholder="请输入{{item.label}}"
+            data-field="{{item.field}}"
+            data-index="{{index}}"
+            bindinput="onResultChange"
+            bindblur="validateField"
+          />
+          <button 
+            class="copy-single-btn" 
+            bindtap="copySingleResult" 
+            data-value="{{item.value}}"
+          >
+            复制
+          </button>
+        </view>
+      </view>
+      
+      <!-- 验证结果 -->
+      <view class="validation-result" wx:if="{{validationErrors.length > 0}}">
+        <view class="validation-header">
+          <text class="validation-title">⚠️ 验证结果</text>
+        </view>
+        <view class="validation-list">
+          <view class="validation-item" wx:for="{{validationErrors}}" wx:key="field">
+            <text class="validation-text">{{item.message}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 历史记录 -->
+  <view class="history-section" wx:if="{{history.length > 0}}">
+    <view class="history-card card">
+      <view class="history-header">
+        <text class="history-title">📊 识别历史</text>
+        <button class="clear-btn" bindtap="clearHistory">清空</button>
+      </view>
+      
+      <scroll-view class="history-list" scroll-y>
+        <view class="history-item" wx:for="{{history}}" wx:key="index">
+          <view class="history-info">
+            <text class="history-type">{{item.data.cardTypeName}}</text>
+            <text class="history-time">{{item.time}}</text>
+          </view>
+          <view class="history-result" bindtap="showHistoryDetail" data-index="{{index}}">
+            <text class="history-text">点击查看详情 →</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 隐私保护声明 -->
+  <view class="privacy-card card">
+    <view class="privacy-header">
+      <text class="privacy-title">🔒 隐私保护</text>
+    </view>
+    <view class="privacy-content">
+      <text class="privacy-text">
+        我们严格遵守微信小程序的隐私保护规定：\n\n
+        1. 所有图片仅在本地处理\n
+        2. 不会上传任何证件图片到服务器\n
+        3. 识别结果仅保存在您的设备中\n
+        4. 完全离线运行，保护您的隐私
+      </text>
+    </view>
+  </view>
+</view>
