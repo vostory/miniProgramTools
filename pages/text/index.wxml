@@ -1,0 +1,194 @@
+<view class="text-page" data-theme="{{theme}}">
+  <!-- 顶部导航 -->
+  <view class="custom-nav">
+    <button class="back-btn" bindtap="goBack">←</button>
+    <!-- <text class="nav-title">文本处理</text> -->
+    <button class="home-btn" bindtap="goHome">🏠</button>
+  </view>
+
+  <!-- 处理类型选择 -->
+  <view class="type-section">
+    <view class="type-buttons">
+      <button 
+        class="type-btn {{formatType === 'json' ? 'active' : ''}}" 
+        data-type="json"
+        bindtap="changeFormatType"
+      >
+        JSON格式化
+      </button>
+      <button 
+        class="type-btn {{formatType === 'xml' ? 'active' : ''}}" 
+        data-type="xml"
+        bindtap="changeFormatType"
+      >
+        XML格式化
+      </button>
+      <button 
+        class="type-btn {{formatType === 'yaml' ? 'active' : ''}}" 
+        data-type="yaml"
+        bindtap="changeFormatType"
+      >
+        YAML格式化
+      </button>
+      <button 
+        class="type-btn {{formatType === 'markdown' ? 'active' : ''}}" 
+        data-type="markdown"
+        bindtap="changeFormatType"
+      >
+        Markdown
+      </button>
+      <button 
+        class="type-btn {{formatType === 'html' ? 'active' : ''}}" 
+        data-type="html"
+        bindtap="changeFormatType"
+      >
+        HTML格式化
+      </button>
+    </view>
+  </view>
+
+  <!-- 输入区域 -->
+  <view class="input-section">
+    <view class="input-card card">
+      <!-- 输入文本区域 -->
+      <view class="input-group">
+        <view class="input-label">
+          <text>输入文本</text>
+          <text class="input-counter">{{inputText.length}} 字符</text>
+        </view>
+        <textarea 
+          class="text-input" 
+          placeholder="请输入要处理的文本..." 
+          value="{{inputText}}"
+          bindinput="onInputChange"
+          auto-height
+          maxlength="{{maxLength}}"
+        />
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="action-buttons">
+        <button class="action-btn paste-btn" bindtap="pasteFromClipboard">
+          粘贴
+        </button>
+        <button class="action-btn clear-btn" bindtap="clearInput">
+          清空
+        </button>
+        <button class="action-btn sample-btn" bindtap="loadSample">
+          示例
+        </button>
+      </view>
+
+      <!-- 格式化选项 -->
+      <view class="format-options" wx:if="{{formatType === 'json'}}">
+        <view class="options-group">
+          <checkbox-group bindchange="toggleOption">
+            <label class="option-item">
+              <checkbox value="indent" checked="{{indentSpaces > 0}}" /> 缩进
+            </label>
+            <label class="option-item" wx:if="{{indentSpaces > 0}}">
+              <picker 
+                class="indent-picker" 
+                range="{{indentOptions}}" 
+                value="{{indentIndex}}"
+                bindchange="changeIndent"
+              >
+                <view class="picker-display">{{indentOptions[indentIndex]}} 空格</view>
+              </picker>
+            </label>
+            <label class="option-item">
+              <checkbox value="sort" checked="{{sortKeys}}" /> 按键排序
+            </label>
+          </checkbox-group>
+        </view>
+      </view>
+
+      <!-- 处理按钮 -->
+      <button 
+        class="process-btn" 
+        bindtap="processText"
+        disabled="{{!inputText || isProcessing}}"
+      >
+        {{isProcessing ? '处理中...' : '开始处理'}}
+      </button>
+    </view>
+  </view>
+
+  <!-- 处理结果 -->
+  <view class="result-section" wx:if="{{resultText}}">
+    <view class="result-card card">
+      <view class="result-header">
+        <text class="result-title">处理结果</text>
+        <view class="result-actions">
+          <button class="copy-btn" bindtap="copyResult">复制</button>
+          <button class="clear-btn" bindtap="clearResult">清空</button>
+        </view>
+      </view>
+
+      <!-- 结果显示 -->
+      <view class="result-group">
+        <view class="result-label">
+          <text>格式化结果</text>
+          <text class="result-counter">{{resultText.length}} 字符</text>
+        </view>
+        <scroll-view class="result-container" scroll-y>
+          <view class="result-content {{formatType}}">
+            <text class="result-text">{{resultText}}</text>
+          </view>
+        </scroll-view>
+      </view>
+
+      <!-- 处理信息 -->
+      <view class="info-group" wx:if="{{processInfo}}">
+        <view class="info-label">
+          <text>处理信息</text>
+        </view>
+        <view class="info-content">
+          <text class="info-text">{{processInfo}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 格式说明 -->
+  <view class="help-section">
+    <view class="help-card card">
+      <view class="help-header">
+        <text class="help-title">{{helpTitle}}</text>
+      </view>
+      <view class="help-content">
+        <view class="help-item" wx:for="{{helpItems}}" wx:key="index">
+          <text class="help-dot">•</text>
+          <text class="help-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 历史记录 -->
+  <view class="history-section" wx:if="{{history.length > 0}}">
+    <view class="history-card card">
+      <view class="history-header">
+        <text class="history-title">处理历史</text>
+        <button class="clear-btn" bindtap="clearHistory">清空</button>
+      </view>
+      <scroll-view class="history-list" scroll-y>
+        <view 
+          class="history-item" 
+          wx:for="{{history}}" 
+          wx:key="index"
+          data-index="{{index}}"
+          bindtap="loadHistoryItem"
+        >
+          <view class="history-type">
+            <text class="type-label">{{item.data.type}}格式化</text>
+            <text class="history-time">{{item.time}}</text>
+          </view>
+          <view class="history-preview">
+            <text class="preview-text">{{item.data.preview}}</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+</view>

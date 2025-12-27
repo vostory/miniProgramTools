@@ -8,7 +8,8 @@
     "pages/ocr/index",
     "pages/currency/index",
     "pages/loan/index",
-    "pages/base/index"
+    "pages/base/index",
+    "pages/text/index"
   ],
   "window": {
     "backgroundTextStyle": "light",

@@ -105,7 +105,7 @@
     <!-- </view> -->
 
     <!-- <view class="tool-card coming-soon" bindtap="showComingSoon"> -->
-      <navigator 
+    <navigator 
       class="tool-card" 
       url="/pages/base/index" 
       hover-class="tool-hover"
@@ -116,11 +116,17 @@
     <!-- </view> -->
   </navigator>
 
-    <view class="tool-card coming-soon" bindtap="showComingSoon">
+    <!-- <view class="tool-card coming-soon" bindtap="showComingSoon"> -->
+    <navigator 
+      class="tool-card" 
+      url="/pages/text/index" 
+      hover-class="tool-hover"
+    >
       <view class="tool-icon">📋</view>
       <text class="tool-name">文本处理</text>
       <text class="tool-desc">格式转换、统计</text>
-    </view>
+    <!-- </view> -->
+    </navigator>
   </view>
 
   <!-- 快捷功能栏 -->
