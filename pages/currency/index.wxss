@@ -1,0 +1,514 @@
+/* 页面容器 */
+.currency-page {
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  padding-bottom: 100rpx;
+}
+
+/* 自定义导航栏 */
+.custom-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+  background-color: var(--card-bg);
+  border-bottom: 1rpx solid var(--border-color);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.back-btn, .home-btn {
+  background: none;
+  border: none;
+  font-size: 36rpx;
+  padding: 0;
+  margin: 0;
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+  transition: all 0.2s;
+}
+
+.back-btn:active, .home-btn:active {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.nav-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-color);
+  flex: 1;
+  text-align: center;
+}
+
+/* 更新时间 */
+.update-time {
+  padding: 10rpx 30rpx;
+  background-color: var(--card-bg);
+  border-bottom: 1rpx solid var(--border-color);
+  text-align: center;
+  font-size: 20rpx;
+  color: #666;
+}
+
+/* 主内容区 */
+.main-section {
+  padding: 20rpx 30rpx;
+}
+
+/* 换算卡片 */
+.converter-card {
+  background-color: var(--card-bg);
+  border: 1rpx solid var(--border-color);
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.input-section {
+  margin-bottom: 20rpx;
+}
+
+.input-header {
+  margin-bottom: 10rpx;
+}
+
+.input-label {
+  font-size: 24rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+.amount-group {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+  margin-bottom: 10rpx;
+}
+
+.amount-input {
+  flex: 1;
+  background-color: #ffffff;
+  border: 1rpx solid var(--border-color);
+  border-radius: 4rpx;
+  padding: 20rpx 24rpx;
+  font-size: 36rpx;
+  color: var(--text-color);
+  min-height: 80rpx;
+  line-height: 1.2;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+.amount-input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.amount-input:disabled {
+  background-color: #f8f9fa;
+  color: #999;
+  opacity: 0.8;
+}
+
+.currency-select-group {
+  width: 200rpx;
+}
+
+.currency-picker {
+  background-color: #ffffff;
+  border: 1rpx solid var(--border-color);
+  border-radius: 4rpx;
+  padding: 20rpx 16rpx;
+  font-size: 24rpx;
+  color: var(--text-color);
+  text-align: center;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 60rpx;
+  line-height: 1.2;
+  transition: all 0.3s;
+}
+
+.currency-picker:active {
+  border-color: var(--primary-color);
+  background-color: rgba(7, 193, 96, 0.1);
+}
+
+.picker-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+}
+
+.currency-symbol {
+  font-size: 24rpx;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.currency-code {
+  font-size: 22rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+/* 转换控制 */
+.conversion-control {
+  display: flex;
+  justify-content: center;
+  margin: 20rpx 0 30rpx;
+}
+
+.swap-btn {
+  background: none;
+  border: 1rpx solid var(--border-color);
+  border-radius: 4rpx;
+  padding: 12rpx 24rpx;
+  font-size: 24rpx;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rpx;
+  transition: all 0.3s;
+  background-color: var(--card-bg);
+  width: 200rpx;
+}
+
+.swap-btn::after {
+  border: none;
+}
+
+.swap-btn:active {
+  border-color: var(--primary-color);
+  background-color: rgba(7, 193, 96, 0.1);
+  color: var(--primary-color);
+}
+
+.swap-icon {
+  font-size: 24rpx;
+  color: inherit;
+}
+
+/* 汇率显示 */
+.rate-display {
+  margin: 20rpx 0 30rpx;
+  padding: 15rpx 20rpx;
+  background-color: #f8f9fa;
+  border: 1rpx solid var(--border-color);
+  border-radius: 0;
+  text-align: center;
+}
+
+.rate-text {
+  font-size: 24rpx;
+  color: var(--text-color);
+  line-height: 1.4;
+}
+
+/* 计算按钮 */
+.calc-btn {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  border-radius: 0;
+  font-size: 28rpx;
+  font-weight: 600;
+  height: 80rpx;
+  line-height: 80rpx;
+  width: 100%;
+  transition: all 0.3s;
+  box-shadow: 0 2rpx 8rpx rgba(7, 193, 96, 0.3);
+}
+
+.calc-btn::after {
+  border: none;
+}
+
+.calc-btn:disabled {
+  background-color: #cccccc;
+  color: #999999;
+  opacity: 0.7;
+  box-shadow: none;
+}
+
+.calc-btn:active:not(:disabled) {
+  background-color: #06b155;
+  transform: translateY(2rpx);
+}
+
+/* 常用货币 */
+.common-currencies {
+  background-color: var(--card-bg);
+  border: 1rpx solid var(--border-color);
+  padding: 20rpx 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+
+.section-title {
+  font-size: 24rpx;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.currency-scroll {
+  width: 100%;
+  white-space: nowrap;
+  height: 100rpx;
+}
+
+.currency-scroll-content {
+  display: inline-flex;
+  gap: 20rpx;
+  padding-bottom: 10rpx;
+}
+
+.currency-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 15rpx 20rpx;
+  background-color: #ffffff;
+  border: 1rpx solid var(--border-color);
+  border-radius: 0;
+  min-width: 100rpx;
+  height: 80rpx;
+  transition: all 0.3s;
+  flex-shrink: 0;
+}
+
+.currency-item:active {
+  border-color: var(--primary-color);
+  background-color: rgba(7, 193, 96, 0.1);
+  transform: translateY(-2rpx);
+}
+
+.currency-symbol-small {
+  font-size: 28rpx;
+  color: var(--text-color);
+  margin-bottom: 5rpx;
+}
+
+.currency-code-small {
+  font-size: 20rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+/* 汇率表格 */
+.rates-table-section {
+  background-color: var(--card-bg);
+  border: 1rpx solid var(--border-color);
+  padding: 20rpx 30rpx;
+  margin-bottom: 20rpx;
+}
+
+.rates-table {
+  border: 1rpx solid var(--border-color);
+  background-color: #ffffff;
+}
+
+.table-header {
+  display: flex;
+  background-color: #f8f9fa;
+  border-bottom: 1rpx solid var(--border-color);
+  padding: 15rpx 20rpx;
+  font-weight: 600;
+}
+
+.header-cell {
+  flex: 1;
+  text-align: center;
+  font-size: 22rpx;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.currency-cell {
+  flex: 2;
+  text-align: left;
+  padding-left: 20rpx;
+}
+
+.rate-cell {
+  flex: 2;
+  text-align: center;
+}
+
+.time-cell {
+  flex: 3;
+  text-align: right;
+  padding-right: 20rpx;
+}
+
+.table-body {
+  max-height: 300rpx;
+  overflow-y: auto;
+}
+
+.table-row {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  border-bottom: 1rpx solid var(--border-color);
+  transition: background-color 0.3s;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-row:active {
+  background-color: #f8f9fa;
+}
+
+.table-cell {
+  flex: 1;
+  font-size: 22rpx;
+  color: var(--text-color);
+}
+
+.cell-symbol {
+  font-size: 22rpx;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-right: 10rpx;
+}
+
+.cell-code {
+  font-size: 20rpx;
+  color: #666;
+}
+
+/* 历史记录 */
+.history-section {
+  background-color: var(--card-bg);
+  border: 1rpx solid var(--border-color);
+  padding: 20rpx 30rpx;
+  margin: 0 30rpx 20rpx;
+}
+
+.clear-history-btn {
+  background: none;
+  border: none;
+  color: #ff4d4f;
+  font-size: 24rpx;
+  padding: 8rpx 16rpx;
+  transition: all 0.3s;
+}
+
+.clear-history-btn::after {
+  border: none;
+}
+
+.clear-history-btn:active {
+  background-color: #fff5f5;
+  transform: scale(0.95);
+}
+
+.history-list {
+  max-height: 300rpx;
+  overflow-y: auto;
+  padding-right: 10rpx;
+}
+
+.history-item {
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid var(--border-color);
+  transition: background-color 0.3s;
+}
+
+.history-item:active {
+  background-color: #f8f9fa;
+}
+
+.history-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10rpx;
+  gap: 10rpx;
+  flex-wrap: wrap;
+}
+
+.history-amount {
+  font-size: 24rpx;
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.history-currency {
+  font-size: 22rpx;
+  color: var(--primary-color);
+  font-weight: 500;
+  background-color: rgba(7, 193, 96, 0.1);
+  padding: 4rpx 12rpx;
+  border-radius: 0;
+  margin: 0 5rpx;
+}
+
+.history-equals {
+  font-size: 20rpx;
+  color: #999;
+  margin: 0 5rpx;
+}
+
+.history-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 20rpx;
+  color: #666;
+}
+
+.history-rate {
+  color: #666;
+}
+
+.history-time {
+  color: #999;
+}
+
+/* 说明信息 */
+.info-section {
+  background-color: var(--card-bg);
+  border: 1rpx solid var(--border-color);
+  padding: 20rpx 30rpx;
+  margin: 0 30rpx 20rpx;
+}
+
+.info-header {
+  margin-bottom: 20rpx;
+}
+
+.info-title {
+  font-size: 24rpx;
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.info-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10rpx;
+}
+
+.info-text {
+  font-size: 20rpx;
+  color: #666;
+  line-height: 1.4;
+  display: block;
+}

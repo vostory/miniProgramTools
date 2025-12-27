@@ -80,11 +80,17 @@
     </navigator>
 
     <!-- 第4行 - 占位功能 -->
-    <view class="tool-card coming-soon" bindtap="showComingSoon">
+    <!-- <view class="tool-card coming-soon" bindtap="showComingSoon"> -->
+    <navigator 
+      class="tool-card" 
+      url="/pages/currency/index" 
+      hover-class="tool-hover"
+    >
       <view class="tool-icon">📊</view>
       <text class="tool-name">货币换算</text>
       <text class="tool-desc">汇率计算（需网络）</text>
-    </view>
+    </navigator>
+    <!-- </view> -->
 
     <view class="tool-card coming-soon" bindtap="showComingSoon">
       <view class="tool-icon">📈</view>

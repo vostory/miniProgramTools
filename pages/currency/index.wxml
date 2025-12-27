@@ -1,0 +1,181 @@
+<view class="currency-page" data-theme="{{theme}}">
+  <!-- 顶部导航 -->
+  <view class="custom-nav">
+    <button class="back-btn" bindtap="goBack">←</button>
+    <!-- <text class="nav-title">货币换算</text> -->
+    <button class="home-btn" bindtap="goHome">🏠</button>
+  </view>
+
+  <!-- 汇率更新时间 -->
+  <view class="update-time" wx:if="{{lastUpdate}}">
+    <text>汇率更新时间: {{lastUpdate}}</text>
+  </view>
+
+  <!-- 主换算区域 -->
+  <view class="main-section">
+    <view class="converter-card card">
+      <!-- 输入区域 -->
+      <view class="input-section">
+        <view class="input-header">
+          <text class="input-label">输入金额</text>
+        </view>
+        <view class="amount-group">
+          <input 
+            class="amount-input" 
+            type="number" 
+            placeholder="0.00" 
+            value="{{fromAmount}}" 
+            bindinput="onFromAmountChange"
+          />
+          <view class="currency-select-group">
+            <picker 
+              class="currency-picker" 
+              range="{{currencyList}}" 
+              range-key="nameWithSymbol" 
+              value="{{fromCurrencyIndex}}" 
+              bindchange="onFromCurrencyChange"
+            >
+              <view class="picker-display">
+                <text class="currency-symbol">{{currencyList[fromCurrencyIndex].symbol}}</text>
+                <text class="currency-code">{{currencyList[fromCurrencyIndex].code}}</text>
+              </view>
+            </picker>
+          </view>
+        </view>
+      </view>
+
+      <!-- 转换按钮 -->
+      <view class="conversion-control">
+        <button class="swap-btn" bindtap="swapCurrencies">
+          <text class="swap-icon">⇄ 交换</text>
+        </button>
+      </view>
+
+      <!-- 输出区域 -->
+      <view class="input-section">
+        <view class="input-header">
+          <text class="input-label">换算结果</text>
+        </view>
+        <view class="amount-group">
+          <input 
+            class="amount-input" 
+            type="text" 
+            placeholder="0.00" 
+            value="{{toAmount}}" 
+            disabled
+          />
+          <view class="currency-select-group">
+            <picker 
+              class="currency-picker" 
+              range="{{currencyList}}" 
+              range-key="nameWithSymbol" 
+              value="{{toCurrencyIndex}}" 
+              bindchange="onToCurrencyChange"
+            >
+              <view class="picker-display">
+                <text class="currency-symbol">{{currencyList[toCurrencyIndex].symbol}}</text>
+                <text class="currency-code">{{currencyList[toCurrencyIndex].code}}</text>
+              </view>
+            </picker>
+          </view>
+        </view>
+      </view>
+
+      <!-- 汇率显示 -->
+      <view class="rate-display" wx:if="{{exchangeRate}}">
+        <text class="rate-text">汇率: 1 {{currencyList[fromCurrencyIndex].code}} = {{exchangeRate}} {{currencyList[toCurrencyIndex].code}}</text>
+      </view>
+
+      <!-- 计算按钮 -->
+      <button 
+        class="calc-btn" 
+        bindtap="startConvert" 
+        disabled="{{!fromAmount || isConverting}}"
+      >
+        {{isConverting ? '计算中...' : '立即换算'}}
+      </button>
+    </view>
+
+    <!-- 常用货币 -->
+    <view class="common-currencies">
+      <view class="section-header">
+        <text class="section-title">常用货币</text>
+      </view>
+      <scroll-view class="currency-scroll" scroll-x>
+        <view class="currency-scroll-content">
+          <view 
+            class="currency-item" 
+            wx:for="{{quickCurrencies}}" 
+            wx:key="code"
+            data-code="{{item.code}}"
+            data-type="{{item.type}}"
+            bindtap="quickSelectCurrency"
+          >
+            <text class="currency-symbol-small">{{item.symbol}}</text>
+            <text class="currency-code-small">{{item.code}}</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 汇率表格 -->
+    <view class="rates-table-section" wx:if="{{exchangeRates.length > 0}}">
+      <view class="section-header">
+        <text class="section-title">主要货币汇率 (以{{currencyList[fromCurrencyIndex].code}}为基准)</text>
+      </view>
+      <view class="rates-table">
+        <view class="table-header">
+          <text class="header-cell">货币</text>
+          <text class="header-cell">汇率</text>
+          <text class="header-cell">更新时间</text>
+        </view>
+        <scroll-view class="table-body" scroll-y>
+          <view class="table-row" wx:for="{{exchangeRates}}" wx:key="code">
+            <view class="table-cell currency-cell">
+              <text class="cell-symbol">{{item.symbol}}</text>
+              <text class="cell-code">{{item.code}}</text>
+            </view>
+            <text class="table-cell rate-cell">{{item.rate.toFixed(4)}}</text>
+            <text class="table-cell time-cell">{{item.timestamp}}</text>
+          </view>
+        </scroll-view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 历史记录 -->
+  <view class="history-section" wx:if="{{history.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">历史记录</text>
+      <button class="clear-history-btn" bindtap="clearHistory">清空</button>
+    </view>
+    <view class="history-list">
+      <view class="history-item" wx:for="{{history}}" wx:key="index">
+        <view class="history-content">
+          <text class="history-amount">{{item.data.fromAmount}}</text>
+          <text class="history-currency">{{item.data.fromCurrency}}</text>
+          <text class="history-equals">=</text>
+          <text class="history-amount">{{item.data.toAmount}}</text>
+          <text class="history-currency">{{item.data.toCurrency}}</text>
+        </view>
+        <view class="history-info">
+          <text class="history-rate">汇率: {{item.data.rate}}</text>
+          <text class="history-time">{{item.time}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 说明信息 -->
+  <view class="info-section">
+    <view class="info-header">
+      <text class="info-title">使用说明</text>
+    </view>
+    <view class="info-content">
+      <text class="info-text">• 支持全球150+种货币实时换算</text>
+      <text class="info-text">• 汇率数据每30分钟自动更新</text>
+      <text class="info-text">• 支持离线使用（使用缓存汇率）</text>
+      <text class="info-text">• 所有数据仅保存在本地</text>
+    </view>
+  </view>
+</view>

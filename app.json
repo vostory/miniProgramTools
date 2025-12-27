@@ -5,7 +5,8 @@
     "pages/calculator/scientific/index",
     "pages/datecalc/index",
     "pages/converter/index",
-    "pages/ocr/index"
+    "pages/ocr/index",
+    "pages/currency/index"
   ],
   "window": {
     "backgroundTextStyle": "light",
